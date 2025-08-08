@@ -9,6 +9,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
     <style>
+        html {
+            scroll-behavior: smooth;
+        }
         body {
             font-family: 'Montserrat', sans-serif;
             background-color: #111827; /* bg-gray-900 */
@@ -57,6 +60,7 @@
         .delay-1 { animation-delay: 0.2s; }
         .delay-2 { animation-delay: 0.4s; }
         .delay-3 { animation-delay: 0.6s; }
+        .delay-4 { animation-delay: 0.8s; }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-200">
@@ -65,7 +69,7 @@
     <div class="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
         <div class="relative z-10 flex flex-col items-center text-center">
             <div class="hero-circle w-72 h-72 md:w-96 md:h-96 border-4 border-indigo-500 rounded-full flex flex-col items-center justify-center p-8">
-                <h1 class="font-syne text-4xl md:text-6xl font-extrabold text-white uppercase tracking-wider fade-in">PERMANENT</h1>
+                <h1 class="font-syne text-4xl md:text-5xl font-extrabold text-white uppercase tracking-wider fade-in">PERMANENT</h1>
                 <p class="mt-4 text-lg md:text-xl text-indigo-300 max-w-sm fade-in delay-1">Their thought becomes a permanent reality.</p>
             </div>
             <p class="mt-8 text-sm text-gray-400 fade-in delay-2">A creation by Heri Sanjaya</p>
@@ -76,7 +80,7 @@
         </div>
     </div>
 
-    <!-- The Effect Section - Wavy Lines -->
+    <!-- The Effect Section -->
     <div class="py-20 px-4 sm:px-6 lg:px-8 relative">
         <svg class="absolute top-0 left-0 w-full h-full opacity-10 z-0" preserveAspectRatio="none" viewBox="0 0 100 100">
             <path d="M0,50 C25,10 40,90 75,30 S100,70 100,50" fill="none" stroke="#4F46E5" stroke-width="1" class="wavy-line-path" stroke-dasharray="500"></path>
@@ -106,30 +110,15 @@
                     <div class="rounded-[2rem] overflow-hidden w-full h-full bg-black flex items-center justify-center p-6">
                         <!-- ESP Symbols Grid (Dice Layout with Canvas) -->
                         <div class="grid grid-cols-3 grid-rows-3 w-full h-full">
-                            <!-- Circle (Top-Left) -->
-                            <div class="flex justify-center items-center esp-symbol">
-                                <canvas id="esp-circle" width="48" height="48"></canvas>
-                            </div>
+                            <div class="flex justify-center items-center esp-symbol"><canvas id="esp-circle" width="48" height="48"></canvas></div>
                             <div></div>
-                            <!-- Cross (Top-Right) -->
-                            <div class="flex justify-center items-center esp-symbol">
-                                <canvas id="esp-cross" width="48" height="48"></canvas>
-                            </div>
+                            <div class="flex justify-center items-center esp-symbol"><canvas id="esp-cross" width="48" height="48"></canvas></div>
                             <div></div>
-                            <!-- Star (Center) -->
-                            <div class="flex justify-center items-center esp-symbol">
-                                <canvas id="esp-star" width="56" height="56"></canvas>
-                            </div>
+                            <div class="flex justify-center items-center esp-symbol"><canvas id="esp-star" width="56" height="56"></canvas></div>
                             <div></div>
-                            <!-- Square (Bottom-Left) -->
-                            <div class="flex justify-center items-center esp-symbol">
-                                <canvas id="esp-square" width="48" height="48"></canvas>
-                            </div>
+                            <div class="flex justify-center items-center esp-symbol"><canvas id="esp-square" width="48" height="48"></canvas></div>
                             <div></div>
-                            <!-- Wavy Lines (Bottom-Right) -->
-                            <div class="flex justify-center items-center esp-symbol">
-                                <canvas id="esp-wavy" width="48" height="48"></canvas>
-                            </div>
+                            <div class="flex justify-center items-center esp-symbol"><canvas id="esp-wavy" width="48" height="48"></canvas></div>
                         </div>
                     </div>
                 </div>
@@ -143,25 +132,21 @@
             <h2 class="font-syne text-3xl md:text-4xl font-bold text-white">Pure. Direct. Impossible.</h2>
             <p class="mt-4 max-w-2xl mx-auto text-lg text-gray-400">Permanent is designed to be the perfect organic miracle. No suspicious props, no complex procedures.</p>
             <div class="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                <!-- Feature 1 -->
                 <div class="bg-gray-800 p-8 rounded-xl border border-gray-700 transform hover:scale-105 hover:-translate-y-2 transition-transform duration-300">
                     <div class="text-indigo-400 mb-4"><svg class="w-10 h-10 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path></svg></div>
                     <h3 class="text-xl font-bold text-white">Zero Compromise</h3>
                     <p class="mt-2 text-gray-400">No apps to install. No Bluetooth, NFC, or Wi-Fi needed. It just works.</p>
                 </div>
-                <!-- Feature 2 -->
                 <div class="bg-gray-800 p-8 rounded-xl border border-gray-700 transform hover:scale-105 hover:-translate-y-2 transition-transform duration-300">
                     <div class="text-indigo-400 mb-4"><svg class="w-10 h-10 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg></div>
                     <h3 class="text-xl font-bold text-white">Their Phone</h3>
                     <p class="mt-2 text-gray-400">The magic happens on the spectator's own device, making the effect incredibly personal and baffling.</p>
                 </div>
-                <!-- Feature 3 -->
                 <div class="bg-gray-800 p-8 rounded-xl border border-gray-700 transform hover:scale-105 hover:-translate-y-2 transition-transform duration-300">
                     <div class="text-indigo-400 mb-4"><svg class="w-10 h-10 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg></div>
                     <h3 class="text-xl font-bold text-white">Diabolical Method</h3>
                     <p class="mt-2 text-gray-400">The secret is as clever as the effect. Easy to learn, fun to perform, and completely invisible.</p>
                 </div>
-                <!-- Feature 4 -->
                 <div class="bg-gray-800 p-8 rounded-xl border border-gray-700 transform hover:scale-105 hover:-translate-y-2 transition-transform duration-300">
                     <div class="text-indigo-400 mb-4"><svg class="w-10 h-10 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h5M20 20v-5h-5M4 20L20 4"></path></svg></div>
                     <h3 class="text-xl font-bold text-white">Instantly Repeatable</h3>
@@ -171,6 +156,20 @@
         </div>
     </div>
     
+    <!-- Trailer Section -->
+    <div id="trailer" class="py-20 px-4 sm:px-6 lg:px-8 bg-black">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="font-syne text-3xl md:text-4xl font-bold text-white">See It To Believe It</h2>
+            <p class="mt-4 max-w-2xl mx-auto text-lg text-gray-400">Watch the official trailer and witness the impossible reactions Permanent creates.</p>
+            <div class="mt-8 aspect-w-16 aspect-h-9 rounded-lg overflow-hidden shadow-2xl shadow-indigo-900/50 border-2 border-gray-700">
+                <!-- Placeholder for YouTube/Vimeo embed -->
+                <div class="w-full h-full bg-gray-800 flex items-center justify-center">
+                    <svg class="w-20 h-20 text-gray-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path></svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- A Note from the Creator Section -->
     <div class="py-20 px-4 sm:px-6 lg:px-8">
         <div class="max-w-3xl mx-auto text-center">
@@ -188,11 +187,12 @@
     <div class="py-20 px-4 sm:px-6 lg:px-8 text-center bg-gray-900/70">
         <h2 class="font-syne text-4xl md:text-5xl font-extrabold text-white">Make Their Thought Real.</h2>
         <p class="mt-4 max-w-xl mx-auto text-lg text-gray-300">Get instant access to the complete video tutorial by Heri Sanjaya. Learn Permanent in minutes and start performing miracles today.</p>
-        <div class="mt-10">
-            <a href="#" class="inline-block bg-indigo-600 text-white font-bold text-xl py-4 px-10 rounded-lg shadow-lg shadow-indigo-500/50 transform hover:bg-indigo-500 hover:scale-105 transition-all duration-300">
-                LEARN THE SECRET NOW - $24.95
+        
+        <div class="mt-10 flex flex-col items-center space-y-4">
+            <a href="#" class="inline-block bg-indigo-600 text-white font-bold text-xl py-4 px-10 rounded-lg shadow-lg shadow-indigo-500/50 transform hover:bg-indigo-500 hover:scale-105 transition-all duration-300 w-full max-w-xs">
+                GET IT NOW - <span class="line-through text-gray-300 text-lg mr-2">$10</span> $5
             </a>
-            <p class="mt-4 text-sm text-gray-500">Instant Download | 100% Satisfaction Guarantee</p>
+            <p class="text-sm text-gray-500">50% OFF Launch Price | Instant Download</p>
         </div>
     </div>
 
