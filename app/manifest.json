@@ -1,7 +1,7 @@
 {
   "name": "Permanent",
   "short_name": "Permanent",
-  "start_url": "qrcodegenerator.html",
+  "start_url": "/app/",
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#1a1a1a",
