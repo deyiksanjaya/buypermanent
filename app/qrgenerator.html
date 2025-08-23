@@ -17,12 +17,12 @@
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
-    
+
     <!-- QR Code Library -->
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.4.4/build/qrcode.min.js"></script>
 
@@ -38,7 +38,7 @@
         .cinzel-font {
             font-family: 'Cinzel', serif;
         }
-        
+
         /* Background with a radial gradient similar to the original canvas */
         .main-bg {
              background: radial-gradient(ellipse at center, #1a1a1a 0%, #000000 100%);
@@ -56,7 +56,7 @@
             border-color: rgba(220, 180, 100, 0.7); /* Gold focus color */
             box-shadow: 0 0 15px rgba(220, 180, 100, 0.3);
         }
-        
+
         /* Custom styling for the button */
         .premium-button {
             background: linear-gradient(45deg, #3a3a3a, #1a1a1a);
@@ -64,7 +64,7 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.4);
             transition: all 0.3s ease;
         }
-        
+
         .premium-button:hover:not(:disabled) {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(220, 180, 100, 0.2);
@@ -74,7 +74,7 @@
         .premium-button:active:not(:disabled) {
             transform: translateY(0);
         }
-        
+
         .premium-button:disabled {
             opacity: 0.5;
             cursor: not-allowed;
@@ -91,7 +91,7 @@
             transition: opacity 0.5s ease, transform 0.5s ease;
             visibility: hidden;
         }
-        
+
         .output-container.visible {
             opacity: 1;
             transform: translateY(0);
@@ -111,7 +111,7 @@
         <header class="text-center mb-8 md:mb-12">
             <h1 class="cinzel-font text-3xl md:text-4xl font-bold text-white tracking-wider">Permanent's<br>QR Generator</h1>
         </header>
-        
+
         <!-- License Section - Shown on first load if no license is found -->
         <div id="licenseSection" class="max-w-lg mx-auto hidden">
             <h2 class="cinzel-font text-2xl font-bold text-white mb-4 text-center">Activate Your Product</h2>
@@ -128,7 +128,7 @@
             <!-- Input Form Section -->
             <div class="mb-8 md:mb-12 max-w-lg mx-auto">
                 <form id="qrForm" class="flex flex-col sm:flex-row gap-4">
-                    <input type="text" id="nameInput" placeholder="Enter spectator's name..." class="premium-input w-full px-4 py-3 rounded-lg text-white placeholder-gray-500 focus:ring-0">
+                    <input type="text" id="nameInput" placeholder="Enter spectator's name, or leave it blank" class="premium-input w-full px-4 py-3 rounded-lg text-white placeholder-gray-500 focus:ring-0">
                     <button type="submit" id="generateButton" class="premium-button text-white font-semibold px-6 py-3 rounded-lg whitespace-nowrap">Generate</button>
                 </form>
                 <p id="errorMessage" class="text-red-400 text-center mt-2 h-4"></p>
@@ -138,12 +138,12 @@
             <div id="outputSection" class="flex flex-col items-center gap-8 hidden">
                 <!-- QR Code Display -->
                 <div id="qrContainer" class="output-container rounded-xl p-6 flex flex-col items-center justify-center w-full max-w-sm">
-                     <h2 class="cinzel-font text-2xl font-bold text-white mb-4">Your QR Code</h2>
-                     <div id="qrcode" class="bg-white p-4 rounded-lg shadow-lg"></div>
-                     <p class="text-gray-400 mt-4 text-center text-sm">Click the QR code to make it fullscreen.</p>
-                     
-                     <!-- Share Buttons -->
-                     <div id="shareButtonsContainer" class="mt-4 flex gap-4 hidden">
+                    <h2 class="cinzel-font text-2xl font-bold text-white mb-4">Your QR Code</h2>
+                    <div id="qrcode" class="bg-white p-4 rounded-lg shadow-lg"></div>
+                    <p class="text-gray-400 mt-4 text-center text-sm">Click the QR code to make it fullscreen.</p>
+
+                    <!-- Share Buttons -->
+                    <div id="shareButtonsContainer" class="mt-4 flex gap-4 hidden">
                         <button id="shareQrButton" class="premium-button text-sm flex-1 text-white font-semibold px-4 py-2 rounded-lg flex items-center justify-center gap-2">
                             <img src="https://img.icons8.com/ios/50/ffffff/qr-code--v1.png" alt="Share QR Code" class="w-5 h-5">
                             Share QR
@@ -152,10 +152,10 @@
                             <img src="https://img.icons8.com/sf-regular/48/ffffff/link.png" alt="Share Link" class="w-5 h-5">
                             Share Link
                         </button>
-                     </div>
-                     <p id="copyMessage" class="text-green-400 text-center mt-2 h-4 text-sm"></p>
+                    </div>
+                    <p id="copyMessage" class="text-green-400 text-center mt-2 h-4 text-sm"></p>
                 </div>
-                
+
                 <!-- Webpage Preview -->
                 <div id="previewContainer" class="output-container rounded-xl p-6 flex flex-col w-full max-w-sm">
                     <h2 class="cinzel-font text-2xl font-bold text-white mb-4 text-center">Page Preview</h2>
@@ -212,7 +212,7 @@
         const licenseInput = document.getElementById('licenseInput');
         const submitLicenseButton = document.getElementById('submitLicenseButton');
         const licenseErrorMessage = document.getElementById('licenseErrorMessage');
-        
+
         const qrGeneratorSection = document.getElementById('qrGeneratorSection');
         const qrForm = document.getElementById('qrForm');
         const nameInput = document.getElementById('nameInput');
@@ -282,7 +282,7 @@
 
                 // Check for a license code in local storage
                 const localLicense = localStorage.getItem('permanentMagicLicenseCode');
-                
+
                 if (localLicense) {
                     // If a license exists, validate it with the server's config URL
                     await validateAndStartApp();
@@ -360,7 +360,7 @@
 
                     if (matchFound) {
                         // License is valid!
-                        
+
                         // *** UPDATED: STEP 1 - Create a record in Firestore with the email as the document ID ***
                         const licenseDocRef = doc(firestore, "activatedLicenses", userEmail);
                         await setDoc(licenseDocRef, {
@@ -372,10 +372,10 @@
                         // STEP 2: Remove the license from the Realtime Database to prevent reuse.
                         const licenseToRemoveRef = ref(db, `/licenseCodes/${matchedKey}`);
                         await remove(licenseToRemoveRef);
-                        
+
                         // STEP 3: Only after successful removal, save it locally.
                         localStorage.setItem('permanentMagicLicenseCode', userLicense);
-                        
+
                         // STEP 4: Start the main application.
                         await validateAndStartApp();
 
@@ -397,7 +397,7 @@
                 submitLicenseButton.textContent = "Activate";
             }
         }
-        
+
         /**
          * A helper function to draw text on a canvas with automatic line breaks.
          */
@@ -433,7 +433,7 @@
             previewCanvas.width = rect.width * dpr;
             previewCanvas.height = rect.height * dpr;
             previewCtx.scale(dpr, dpr);
-            
+
             const clientWidth = previewCanvas.clientWidth;
             const clientHeight = previewCanvas.clientHeight;
 
@@ -447,35 +447,35 @@
 
             previewCtx.fillStyle = gradient;
             previewCtx.fillRect(0, 0, clientWidth, clientHeight);
-            
+
             const topTextMargin = 40;
-            const lineSpacing = 30; 
+            const lineSpacing = 30;
             const textPadding = 20;
             const maxWidth = clientWidth - (textPadding * 2);
 
             previewCtx.fillStyle = '#e0e0e0';
             previewCtx.textAlign = 'center';
-            
+
             previewCtx.font = '22px Cinzel';
             previewCtx.fillText(`Hi ${spectatorName},`, centerX, topTextMargin);
-            
+
             previewCtx.font = '14px Cinzel';
             const instructionText = 'Please think of one of the ESP symbols below.';
             const lastTextY = wrapText(previewCtx, instructionText, centerX, topTextMargin + lineSpacing, maxWidth, 20);
-            
+
             previewCtx.strokeStyle = '#e0e0e0';
             previewCtx.lineWidth = Math.min(clientWidth, clientHeight) / 100;
             previewCtx.lineCap = 'round';
-            
+
             const symbolAreaYStart = lastTextY + 30;
             const symbolAreaHeight = clientHeight - symbolAreaYStart - 20;
             const symbolAreaWidth = clientWidth;
-            
+
             const gridSize = 3;
             const minDim = Math.min(symbolAreaWidth, symbolAreaHeight);
             const cellSize = minDim / gridSize;
             const symbolSize = cellSize * 0.8;
-            
+
             const offsetX = (clientWidth - minDim) / 2;
             const offsetY = symbolAreaYStart + (symbolAreaHeight - minDim) / 2;
 
@@ -488,7 +488,7 @@
             symbols.forEach((symbol, i) => {
                 const x = offsetX + (positions[i].col + 0.5) * cellSize;
                 const y = offsetY + (positions[i].row + 0.5) * cellSize;
-                
+
                 previewCtx.beginPath();
                 symbol.draw(previewCtx, x, y, symbolSize);
                 previewCtx.stroke();
@@ -507,7 +507,7 @@
                 'u': 'U', 'v': 'V', 'w': 'W', 'x': 'X', 'y': 'Y',
                 'z': '2', ' ': '_'
             };
-            
+
             let lowercasedText = text.toLowerCase();
             let encoded = '';
             for (let i = 0; i < lowercasedText.length; i++) {
@@ -518,30 +518,46 @@
         }
 
         /**
+         * Displays the QR code in fullscreen mode.
+         * @param {string} url - The URL to encode in the fullscreen QR code.
+         */
+        function showFullscreenQR(url) {
+            fullscreenQrContainer.innerHTML = '';
+            const size = Math.min(window.innerWidth, window.innerHeight) * 0.8;
+            QRCode.toCanvas(url, {
+                errorCorrectionLevel: 'H',
+                width: size,
+                margin: 1,
+                color: { dark: '#000000', light: '#FFFFFF' }
+            }, function(error, canvas) {
+                if (error) return;
+                fullscreenQrContainer.appendChild(canvas);
+                fullscreenModal.classList.remove('hidden');
+            });
+        }
+
+        /**
          * Handles the form submission to generate the QR code and update the preview.
          */
         async function handleGenerate(e) {
             e.preventDefault();
-            const spectatorName = nameInput.value.trim();
+            let spectatorName = nameInput.value.trim();
 
+            // *** UPDATED: Check for empty input and set a default name. ***
             if (!spectatorName) {
-                errorMessage.textContent = 'Please enter a name.';
-                nameInput.focus();
-                qrContainer.classList.remove('visible');
-                previewContainer.classList.remove('visible');
-                return;
+                spectatorName = "Guest";
             }
 
             const formattedName = spectatorName.charAt(0).toUpperCase() + spectatorName.slice(1);
-            
+
             errorMessage.textContent = '';
             copyMessage.textContent = '';
 
             const encodedName = customEncode(formattedName);
             generatedUrl = `${currentURL}?id=${encodeURIComponent(encodedName)}`;
 
-            qrcodeContainer.innerHTML = ''; 
-            QRCode.toCanvas(generatedUrl, { 
+            qrcodeContainer.innerHTML = '';
+            QRCode.toCanvas(generatedUrl, {
                 errorCorrectionLevel: 'H',
                 width: 220,
                 color: { dark: '#000000', light: '#FFFFFF' }
@@ -553,8 +569,11 @@
                 }
                 qrCanvasElement = canvas;
                 qrcodeContainer.appendChild(canvas);
+
+                // *** UPDATED: Show fullscreen modal immediately after generation. ***
+                showFullscreenQR(generatedUrl);
             });
-            
+
             mainBody.classList.remove('justify-center');
             mainBody.classList.add('justify-start', 'pt-8', 'md:pt-12');
             outputSection.classList.remove('hidden');
@@ -625,20 +644,11 @@
         });
 
         // --- Modal Logic ---
+        // This event listener now calls the new function
         qrcodeContainer.addEventListener('click', () => {
-            if (!qrCanvasElement) return;
-            fullscreenQrContainer.innerHTML = '';
-            const size = Math.min(window.innerWidth, window.innerHeight) * 0.8;
-            QRCode.toCanvas(generatedUrl, {
-                errorCorrectionLevel: 'H',
-                width: size,
-                margin: 1,
-                color: { dark: '#000000', light: '#FFFFFF' }
-            }, function(error, canvas) {
-                if (error) return;
-                fullscreenQrContainer.appendChild(canvas);
-                fullscreenModal.classList.remove('hidden');
-            });
+            if (generatedUrl) {
+                showFullscreenQR(generatedUrl);
+            }
         });
 
         closeModalButton.addEventListener('click', () => {
