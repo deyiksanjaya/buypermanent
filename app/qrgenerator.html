@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <link rel="manifest" href="manifest.json">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Permanent QR Generator by Heri Sanjaya</title>
 
@@ -657,6 +658,13 @@
         // --- Start the application ---
         initialize();
     </script>
-
+<!-- Skrip Pendaftaran Service Worker -->
+<script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/service-worker.js');
+        });
+    }
+</script>
 </body>
 </html>
