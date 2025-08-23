@@ -21,7 +21,8 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@400;500&display=swap"
+        rel="stylesheet">
 
     <!-- QR Code Library -->
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.4.4/build/qrcode.min.js"></script>
@@ -41,7 +42,7 @@
 
         /* Background with a radial gradient similar to the original canvas */
         .main-bg {
-             background: radial-gradient(ellipse at center, #1a1a1a 0%, #000000 100%);
+            background: radial-gradient(ellipse at center, #1a1a1a 0%, #000000 100%);
         }
 
         /* Custom styling for the input field */
@@ -53,7 +54,8 @@
 
         .premium-input:focus {
             outline: none;
-            border-color: rgba(220, 180, 100, 0.7); /* Gold focus color */
+            border-color: rgba(220, 180, 100, 0.7);
+            /* Gold focus color */
             box-shadow: 0 0 15px rgba(220, 180, 100, 0.3);
         }
 
@@ -61,7 +63,7 @@
         .premium-button {
             background: linear-gradient(45deg, #3a3a3a, #1a1a1a);
             border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
             transition: all 0.3s ease;
         }
 
@@ -104,21 +106,26 @@
     </style>
 </head>
 
-<body id="mainBody" class="main-bg min-h-screen w-full p-4 flex flex-col items-center justify-center transition-all duration-700 ease-in-out">
+<body id="mainBody"
+    class="main-bg min-h-screen w-full p-4 flex flex-col items-center justify-center transition-all duration-700 ease-in-out">
 
     <div class="w-full max-w-xl mx-auto">
         <!-- Header Section -->
         <header class="text-center mb-8 md:mb-12">
-            <h1 class="cinzel-font text-3xl md:text-4xl font-bold text-white tracking-wider">Permanent's<br>QR Generator</h1>
+            <h1 class="cinzel-font text-3xl md:text-4xl font-bold text-white tracking-wider">Permanent's<br>QR Generator
+            </h1>
         </header>
 
         <!-- License Section - Shown on first load if no license is found -->
         <div id="licenseSection" class="max-w-lg mx-auto hidden">
             <h2 class="cinzel-font text-2xl font-bold text-white mb-4 text-center">Activate Your Product</h2>
             <form id="licenseForm" class="flex flex-col gap-4">
-                <input type="email" id="emailInput" placeholder="Enter your email..." class="premium-input w-full px-4 py-3 rounded-lg text-white placeholder-gray-500 focus:ring-0" required>
-                <input type="text" id="licenseInput" placeholder="Enter your license code..." class="premium-input w-full px-4 py-3 rounded-lg text-white placeholder-gray-500 focus:ring-0" required>
-                <button type="submit" id="submitLicenseButton" class="premium-button text-white font-semibold px-6 py-3 rounded-lg">Activate</button>
+                <input type="email" id="emailInput" placeholder="Enter your email..."
+                    class="premium-input w-full px-4 py-3 rounded-lg text-white placeholder-gray-500 focus:ring-0" required>
+                <input type="text" id="licenseInput" placeholder="Enter your license code..."
+                    class="premium-input w-full px-4 py-3 rounded-lg text-white placeholder-gray-500 focus:ring-0" required>
+                <button type="submit" id="submitLicenseButton"
+                    class="premium-button text-white font-semibold px-6 py-3 rounded-lg">Activate</button>
             </form>
             <p id="licenseErrorMessage" class="text-red-400 text-center mt-2 h-4"></p>
         </div>
@@ -128,8 +135,10 @@
             <!-- Input Form Section -->
             <div class="mb-8 md:mb-12 max-w-lg mx-auto">
                 <form id="qrForm" class="flex flex-col sm:flex-row gap-4">
-                    <input type="text" id="nameInput" placeholder="Enter spectator's name, or leave it blank" class="premium-input w-full px-4 py-3 rounded-lg text-white placeholder-gray-500 focus:ring-0">
-                    <button type="submit" id="generateButton" class="premium-button text-white font-semibold px-6 py-3 rounded-lg whitespace-nowrap">Generate</button>
+                    <input type="text" id="nameInput" placeholder="Enter spectator's name, or leave it blank"
+                        class="premium-input w-full px-4 py-3 rounded-lg text-white placeholder-gray-500 focus:ring-0">
+                    <button type="submit" id="generateButton"
+                        class="premium-button text-white font-semibold px-6 py-3 rounded-lg whitespace-nowrap">Generate</button>
                 </form>
                 <p id="errorMessage" class="text-red-400 text-center mt-2 h-4"></p>
             </div>
@@ -137,19 +146,24 @@
             <!-- Output Section - Initially hidden -->
             <div id="outputSection" class="flex flex-col items-center gap-8 hidden">
                 <!-- QR Code Display -->
-                <div id="qrContainer" class="output-container rounded-xl p-6 flex flex-col items-center justify-center w-full max-w-sm">
+                <div id="qrContainer"
+                    class="output-container rounded-xl p-6 flex flex-col items-center justify-center w-full max-w-sm">
                     <h2 class="cinzel-font text-2xl font-bold text-white mb-4">Your QR Code</h2>
                     <div id="qrcode" class="bg-white p-4 rounded-lg shadow-lg"></div>
                     <p class="text-gray-400 mt-4 text-center text-sm">Click the QR code to make it fullscreen.</p>
 
                     <!-- Share Buttons -->
                     <div id="shareButtonsContainer" class="mt-4 flex gap-4 hidden">
-                        <button id="shareQrButton" class="premium-button text-sm flex-1 text-white font-semibold px-4 py-2 rounded-lg flex items-center justify-center gap-2">
-                            <img src="https://img.icons8.com/ios/50/ffffff/qr-code--v1.png" alt="Share QR Code" class="w-5 h-5">
+                        <button id="shareQrButton"
+                            class="premium-button text-sm flex-1 text-white font-semibold px-4 py-2 rounded-lg flex items-center justify-center gap-2">
+                            <img src="https://img.icons8.com/ios/50/ffffff/qr-code--v1.png" alt="Share QR Code"
+                                class="w-5 h-5">
                             Share QR
                         </button>
-                        <button id="shareLinkButton" class="premium-button text-sm flex-1 text-white font-semibold px-4 py-2 rounded-lg flex items-center justify-center gap-2">
-                            <img src="https://img.icons8.com/sf-regular/48/ffffff/link.png" alt="Share Link" class="w-5 h-5">
+                        <button id="shareLinkButton"
+                            class="premium-button text-sm flex-1 text-white font-semibold px-4 py-2 rounded-lg flex items-center justify-center gap-2">
+                            <img src="https://img.icons8.com/sf-regular/48/ffffff/link.png" alt="Share Link"
+                                class="w-5 h-5">
                             Share Link
                         </button>
                     </div>
@@ -166,13 +180,15 @@
             </div>
 
             <!-- Disclaimer Text -->
-            <p class="text-center text-xs text-gray-500 mt-12">This page is only used to generate a QR code for your spectator. The actual routine does not require this app in play.</p>
+            <p class="text-center text-xs text-gray-500 mt-12">This page is only used to generate a QR code for your
+                spectator. The actual routine does not require this app in play.</p>
         </div>
     </div>
 
     <!-- Fullscreen QR Modal -->
     <div id="fullscreenModal" class="fixed inset-0 bg-black flex items-center justify-center hidden z-50 p-4">
-        <img src="https://img.icons8.com/sf-black/64/ffffff/delete-sign.png" alt="Close" id="closeModalButton" class="absolute top-5 right-5 w-10 h-10 cursor-pointer">
+        <img src="https://img.icons8.com/sf-black/64/ffffff/delete-sign.png" alt="Close" id="closeModalButton"
+            class="absolute top-5 right-5 w-10 h-10 cursor-pointer">
         <div id="fullscreenQrContainer" class="p-4 bg-white rounded-lg">
             <!-- The fullscreen QR canvas will be appended here -->
         </div>
@@ -184,7 +200,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getDatabase, ref, get, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-        // *** UPDATED: Import Firestore and its functions ***
         import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         // Your web app's Firebase configuration
@@ -199,10 +214,11 @@
         };
 
         // --- Global Variables ---
-        let db, auth, firestore; // *** NEW: Added firestore variable
+        let db, auth, firestore;
         let currentURL = '';
         let generatedUrl = null;
         let qrCanvasElement = null;
+        const LICENSE_VALIDITY_DAYS = 30; // Kustomisasi: Berapa hari lisensi dianggap "valid" secara lokal
 
         // --- DOM Element References ---
         const mainBody = document.getElementById('mainBody');
@@ -253,7 +269,7 @@
         ];
 
         /**
-         * Shows the main QR generator app interface and hides the license form.
+         * Menampilkan antarmuka utama aplikasi QR generator.
          */
         function showApp() {
             licenseSection.classList.add('hidden');
@@ -261,7 +277,7 @@
         }
 
         /**
-         * Shows the license submission form.
+         * Menampilkan formulir pengajuan lisensi.
          */
         function showLicenseForm() {
             qrGeneratorSection.classList.add('hidden');
@@ -269,36 +285,59 @@
         }
 
         /**
-         * Initializes Firebase, signs in, and checks for a local license.
+         * Menghitung apakah timestamp validasi lisensi sudah kedaluwarsa.
+         * @returns {boolean} True jika sudah kedaluwarsa atau tidak ada timestamp.
+         */
+        function isLicenseExpired() {
+            const lastValidationTimestamp = localStorage.getItem('lastValidationTimestamp');
+            if (!lastValidationTimestamp) {
+                return true; // Anggap kedaluwarsa jika tidak ada timestamp
+            }
+            const now = new Date().getTime();
+            const lastChecked = parseInt(lastValidationTimestamp);
+            const daysSinceLastCheck = (now - lastChecked) / (1000 * 60 * 60 * 24);
+            return daysSinceLastCheck > LICENSE_VALIDITY_DAYS;
+        }
+
+        /**
+         * Menginisialisasi Firebase dan memeriksa lisensi.
          */
         async function initialize() {
             try {
-                // Initialize Firebase
+                // Inisialisasi Firebase
                 const app = initializeApp(firebaseConfig);
                 auth = getAuth(app);
                 db = getDatabase(app);
-                firestore = getFirestore(app); // *** NEW: Initialize Firestore
+                firestore = getFirestore(app);
                 await signInAnonymously(auth);
 
-                // Check for a license code in local storage
                 const localLicense = localStorage.getItem('permanentMagicLicenseCode');
 
-                if (localLicense) {
-                    // If a license exists, validate it with the server's config URL
-                    await validateAndStartApp();
+                if (localLicense && !isLicenseExpired()) {
+                    // Jika lisensi ada dan belum kedaluwarsa secara lokal, langsung tampilkan aplikasi
+                    // Ini memungkinkan aplikasi berfungsi offline.
+                    console.log("Lisensi lokal valid, memuat aplikasi tanpa memeriksa Firebase.");
+                    const configRef = ref(db, '/config');
+                    const snapshot = await get(configRef);
+                    if (snapshot.exists()) {
+                        const data = snapshot.val();
+                        currentURL = data.currentURL;
+                    }
+                    showApp();
                 } else {
-                    // If no local license, show the submission form
-                    showLicenseForm();
+                    // Jika lisensi tidak ada atau sudah kedaluwarsa, lakukan validasi ke Firebase
+                    console.log("Lisensi tidak ada atau kedaluwarsa, memeriksa ke Firebase...");
+                    await validateAndStartApp();
                 }
             } catch (error) {
                 console.error("Initialization failed:", error);
                 licenseErrorMessage.textContent = "Error: Could not connect to server.";
-                showLicenseForm(); // Show form even on connection error
+                showLicenseForm();
             }
         }
 
         /**
-         * Fetches the config and starts the app if the license is valid.
+         * Mengambil konfigurasi dari Firebase dan memulai aplikasi jika lisensi valid.
          */
         async function validateAndStartApp() {
             try {
@@ -311,20 +350,22 @@
                     if (!currentURL) {
                         throw new Error("currentURL not found in database.");
                     }
-                    showApp(); // Success! Show the main application.
+                    // Perbarui timestamp validasi terakhir
+                    localStorage.setItem('lastValidationTimestamp', new Date().getTime());
+                    showApp();
                 } else {
                     throw new Error("Configuration not found in database.");
                 }
             } catch (error) {
                 console.error("App startup failed:", error);
                 errorMessage.textContent = "Error: Could not load app configuration.";
-                // In a real app, you might want to handle this more gracefully
+                showLicenseForm();
             }
         }
 
         /**
-         * Handles the submission of the license form.
-         * @param {Event} e - The form submission event.
+         * Menangani pengiriman formulir lisensi.
+         * @param {Event} e - Acara pengiriman formulir.
          */
         async function handleLicenseSubmit(e) {
             e.preventDefault();
@@ -349,7 +390,6 @@
                     let matchFound = false;
                     let matchedKey = null;
 
-                    // Loop through all license keys to find a match
                     for (const key in allLicenses) {
                         if (allLicenses[key] === userLicense) {
                             matchFound = true;
@@ -359,28 +399,25 @@
                     }
 
                     if (matchFound) {
-                        // License is valid!
-
-                        // *** UPDATED: STEP 1 - Create a record in Firestore with the email as the document ID ***
+                        // Lisensi valid!
                         const licenseDocRef = doc(firestore, "activatedLicenses", userEmail);
                         await setDoc(licenseDocRef, {
                             email: userEmail,
                             licenseCode: userLicense,
-                            activatedAt: serverTimestamp() // Adds a server-side timestamp
+                            activatedAt: serverTimestamp()
                         });
 
-                        // STEP 2: Remove the license from the Realtime Database to prevent reuse.
                         const licenseToRemoveRef = ref(db, `/licenseCodes/${matchedKey}`);
                         await remove(licenseToRemoveRef);
 
-                        // STEP 3: Only after successful removal, save it locally.
                         localStorage.setItem('permanentMagicLicenseCode', userLicense);
+                        // Perbarui timestamp validasi terakhir saat aktivasi berhasil
+                        localStorage.setItem('lastValidationTimestamp', new Date().getTime());
 
-                        // STEP 4: Start the main application.
                         await validateAndStartApp();
 
                     } else {
-                        // No match found
+                        // Tidak ada kecocokan
                         licenseErrorMessage.textContent = "Invalid license code.";
                         submitLicenseButton.disabled = false;
                         submitLicenseButton.textContent = "Activate";
@@ -529,7 +566,7 @@
                 width: size,
                 margin: 1,
                 color: { dark: '#000000', light: '#FFFFFF' }
-            }, function(error, canvas) {
+            }, function (error, canvas) {
                 if (error) return;
                 fullscreenQrContainer.appendChild(canvas);
                 fullscreenModal.classList.remove('hidden');
@@ -543,7 +580,6 @@
             e.preventDefault();
             let spectatorName = nameInput.value.trim();
 
-            // *** UPDATED: Check for empty input and set a default name. ***
             if (!spectatorName) {
                 spectatorName = "Guest";
             }
@@ -570,7 +606,6 @@
                 qrCanvasElement = canvas;
                 qrcodeContainer.appendChild(canvas);
 
-                // *** UPDATED: Show fullscreen modal immediately after generation. ***
                 showFullscreenQR(generatedUrl);
             });
 
@@ -644,7 +679,6 @@
         });
 
         // --- Modal Logic ---
-        // This event listener now calls the new function
         qrcodeContainer.addEventListener('click', () => {
             if (generatedUrl) {
                 showFullscreenQR(generatedUrl);
@@ -668,13 +702,14 @@
         // --- Start the application ---
         initialize();
     </script>
-<!-- Skrip Pendaftaran Service Worker -->
-<script>
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/service-worker.js');
-        });
-    }
-</script>
+    <!-- Skrip Pendaftaran Service Worker -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js');
+            });
+        }
+    </script>
 </body>
+
 </html>
