@@ -1,7 +1,7 @@
 const CACHE_NAME = 'qr-generator-cache-v1';
 const urlsToCache = [
-  '/',
-  '/index.html', // Ganti 'index.html' dengan nama file HTML QR Generator Anda jika berbeda
+  '/app/',
+  '/app/qrgenerator.html',
   'https://cdn.tailwindcss.com',
   'https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@400;500&display=swap',
   'https://cdn.jsdelivr.net/npm/qrcode@1.4.4/build/qrcode.min.js'
