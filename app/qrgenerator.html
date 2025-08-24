@@ -10,7 +10,7 @@
     <!-- PWA and Mobile App Tags -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="QR Gen">
     <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/107/107132.png">
     <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/107/107132.png">
@@ -39,7 +39,7 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #000;
+            background-color: #000; /* Solid black background */
             color: #e0e0e0;
         }
 
@@ -48,10 +48,10 @@
         }
 
         .main-bg {
-            background: radial-gradient(ellipse at center, #1a1a1a 0%, #000000 100%);
+            background-color: #000; /* Solid black background */
         }
 
-        /* === INPUT & BUTTON STYLES (Original) === */
+        /* === INPUT & BUTTON STYLES === */
         .premium-input {
             background-color: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -62,6 +62,14 @@
             outline: none;
             border-color: rgba(220, 180, 100, 0.7);
             box-shadow: 0 0 15px rgba(220, 180, 100, 0.3);
+        }
+        
+        .center-text-input {
+            text-align: center;
+        }
+        
+        .center-text-input::placeholder {
+            text-align: center;
         }
 
         .premium-button {
@@ -81,7 +89,7 @@
             cursor: not-allowed;
         }
 
-        /* === OUTPUT CONTAINER STYLES (Original) === */
+        /* === OUTPUT CONTAINER STYLES === */
         .output-container {
             background-color: rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -150,7 +158,7 @@
 </head>
 
 <body id="mainBody"
-    class="main-bg w-full h-full p-4 flex flex-col items-center justify-center transition-all duration-700 ease-in-out">
+    class="main-bg w-full h-full p-4 flex flex-col items-center justify-start transition-all duration-700 ease-in-out">
 
     <div class="w-full max-w-xl mx-auto flex flex-col h-full">
         <!-- Header Section -->
@@ -160,13 +168,13 @@
         </header>
 
         <!-- License Section -->
-        <div id="licenseSection" class="max-w-lg mx-auto hidden">
+        <div id="licenseSection" class="max-w-lg mx-auto">
             <h2 class="cinzel-font text-2xl font-bold text-white mb-4 text-center">Activate Your Product</h2>
             <form id="licenseForm" class="flex flex-col gap-4">
                 <input type="email" id="emailInput" placeholder="Enter your email..."
                     class="premium-input w-full px-4 py-3 rounded-lg text-white placeholder-gray-500 focus:ring-0" required>
                 <input type="text" id="licenseInput" placeholder="Enter your license code..."
-                    class="premium-input w-full px-4 py-3 rounded-lg text-white placeholder-gray-500 focus:ring-0" required>
+                    class="premium-input center-text-input w-full px-4 py-3 rounded-lg text-white placeholder-gray-500 focus:ring-0" required>
                 <button type="submit" id="submitLicenseButton"
                     class="premium-button text-white font-semibold px-6 py-3 rounded-lg">Activate</button>
             </form>
@@ -178,8 +186,8 @@
             <!-- Input Form -->
             <div class="mb-8 md:mb-12 max-w-lg mx-auto flex-shrink-0">
                 <form id="qrForm" class="flex flex-col sm:flex-row gap-4">
-                    <input type="text" id="nameInput" placeholder="Enter spectator's name, or leave it blank"
-                        class="premium-input w-full px-4 py-3 rounded-lg text-white placeholder-gray-500 focus:ring-0">
+                    <input type="text" id="nameInput" placeholder="Enter spectator's name"
+                        class="premium-input center-text-input w-full px-4 py-3 rounded-lg text-white placeholder-gray-500 focus:ring-0">
                     <button type="submit" id="generateButton"
                         class="premium-button text-white font-semibold px-6 py-3 rounded-lg whitespace-nowrap">Generate</button>
                 </form>
@@ -202,7 +210,7 @@
                             <h2 class="cinzel-font text-2xl font-bold text-white mb-4">Your QR Code</h2>
                             <div id="qrcode" class="bg-white p-4 rounded-lg shadow-lg"></div>
                             <p class="text-gray-400 mt-4 text-center text-sm">Click the QR code to make it fullscreen.</p>
-                            <div id="shareButtonsContainer" class="mt-4 flex gap-4 hidden">
+                            <div id="shareButtonsContainer" class="mt-4 flex gap-4">
                                 <button id="shareQrButton" class="premium-button text-sm flex-1 text-white font-semibold px-4 py-2 rounded-lg flex items-center justify-center gap-2">
                                     <img src="https://img.icons8.com/ios/50/ffffff/qr-code--v1.png" alt="Share QR Code" class="w-5 h-5"> Share QR
                                 </button>
@@ -227,7 +235,7 @@
             </div>
 
             <!-- Disclaimer -->
-            <p id="disclaimerText" class="text-center text-xs text-gray-500 mt-auto flex-shrink-0 pb-2">This page is only used to generate a QR code for your spectator. The actual routine does not require this app in play.</p>
+            <p id="disclaimerText" class="hidden text-center text-xs text-gray-500 mt-auto flex-shrink-0 pb-2">This page is only used to generate a QR code for your spectator. The actual routine does not require this app in play.</p>
         </div>
     </div>
 
@@ -294,11 +302,13 @@
         ];
 
         function showApp() {
+            mainBody.classList.remove('justify-center');
             licenseSection.classList.add('hidden');
             qrGeneratorSection.classList.remove('hidden');
         }
 
         function showLicenseForm() {
+            mainBody.classList.add('justify-center');
             qrGeneratorSection.classList.add('hidden');
             licenseSection.classList.remove('hidden');
         }
@@ -342,6 +352,7 @@
                     currentURL = snapshot.val().currentURL;
                     if (!currentURL) throw new Error("currentURL not found in database.");
                     showApp();
+                    await generateAndDisplay("Guest"); // Generate initial content
                 } else {
                     throw new Error("Configuration not found in database.");
                 }
@@ -392,6 +403,35 @@
                  submitLicenseButton.disabled = false;
                  submitLicenseButton.textContent = "Activate";
             }
+        }
+        
+        async function generateAndDisplay(spectatorName) {
+            const formattedName = spectatorName.charAt(0).toUpperCase() + spectatorName.slice(1);
+            errorMessage.textContent = '';
+            copyMessage.textContent = '';
+            generatedUrl = `${currentURL}?id=${encodeURIComponent(customEncode(formattedName))}`;
+
+            qrcodeContainer.innerHTML = '';
+            QRCode.toCanvas(generatedUrl, { errorCorrectionLevel: 'H', width: 220 }, (error, canvas) => {
+                if (error) {
+                    errorMessage.textContent = 'Failed to generate QR code.';
+                    return;
+                }
+                qrCanvasElement = canvas;
+                qrcodeContainer.appendChild(canvas);
+            });
+            
+            outputSection.classList.remove('hidden');
+            dotsContainer.classList.remove('hidden');
+            // disclaimerText remains hidden as it's hidden by default in this flow
+
+            requestAnimationFrame(() => {
+                drawPreview(formattedName);
+                setTimeout(() => {
+                    qrContainer.classList.add('visible');
+                    previewContainer.classList.add('visible');
+                }, 50);
+            });
         }
 
         function drawPreview(spectatorName) {
@@ -471,36 +511,7 @@
         async function handleGenerate(e) {
             e.preventDefault();
             const spectatorName = nameInput.value.trim() || "Guest";
-            const formattedName = spectatorName.charAt(0).toUpperCase() + spectatorName.slice(1);
-            errorMessage.textContent = '';
-            copyMessage.textContent = '';
-            generatedUrl = `${currentURL}?id=${encodeURIComponent(customEncode(formattedName))}`;
-
-            qrcodeContainer.innerHTML = '';
-            QRCode.toCanvas(generatedUrl, { errorCorrectionLevel: 'H', width: 220 }, (error, canvas) => {
-                if (error) {
-                    errorMessage.textContent = 'Failed to generate QR code.';
-                    return;
-                }
-                qrCanvasElement = canvas;
-                qrcodeContainer.appendChild(canvas);
-            });
-            
-            mainBody.classList.remove('justify-center');
-            mainBody.classList.add('justify-start');
-            
-            outputSection.classList.remove('hidden');
-            dotsContainer.classList.remove('hidden');
-            disclaimerText.classList.add('hidden'); // Hide disclaimer
-
-            requestAnimationFrame(() => {
-                drawPreview(formattedName);
-                setTimeout(() => {
-                    qrContainer.classList.add('visible');
-                    previewContainer.classList.add('visible');
-                    shareButtonsContainer.classList.remove('hidden');
-                }, 50);
-            });
+            await generateAndDisplay(spectatorName);
         }
         
         function updateDots() {
