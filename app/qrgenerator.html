@@ -30,10 +30,6 @@
     <style>
         /* Custom styles to match the premium, mystical theme */
         html, body {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-            overflow: hidden; /* Disable scrolling on the entire page */
             -webkit-user-select: none; /* Safari */
             -ms-user-select: none; /* IE 10+ */
             user-select: none; /* Standard syntax */
@@ -43,6 +39,9 @@
             font-family: 'Inter', sans-serif;
             background-color: #000;
             color: #e0e0e0;
+            /* Revert to original overflow, but disable horizontal scroll */
+            overflow-x: hidden;
+            overflow-y: auto;
         }
 
         .cinzel-font {
@@ -64,7 +63,6 @@
         .premium-input:focus {
             outline: none;
             border-color: rgba(220, 180, 100, 0.7);
-            /* Gold focus color */
             box-shadow: 0 0 15px rgba(220, 180, 100, 0.3);
         }
 
@@ -79,7 +77,6 @@
         .premium-button:hover:not(:disabled) {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(220, 180, 100, 0.2);
-            border-color: rgba(220, 180, 100, 0.5);
         }
 
         .premium-button:active:not(:disabled) {
@@ -101,7 +98,6 @@
             transform: translateY(20px);
             transition: opacity 0.5s ease, transform 0.5s ease;
             visibility: hidden;
-            flex: 0 0 100%; /* Each container takes full width of the scroller */
         }
 
         .output-container.visible {
@@ -114,12 +110,13 @@
             cursor: pointer;
         }
 
-        /* Horizontal scroll container */
+        /* Horizontal scroll container for QR/Preview only */
         .scroll-wrapper {
+            width: 100%;
             display: flex;
             overflow-x: auto;
             scroll-snap-type: x mandatory;
-            -webkit-overflow-scrolling: touch; /* for smooth scrolling on iOS */
+            -webkit-overflow-scrolling: touch;
             scrollbar-width: none; /* Firefox */
         }
 
@@ -128,10 +125,12 @@
         }
 
         .scroll-item {
+            flex: 0 0 100%; /* Each item takes full width of the wrapper */
             scroll-snap-align: center;
-            flex: 0 0 100%;
-            width: 100%;
-            padding: 0 1rem; /* Add some spacing between items if needed */
+            padding: 1rem 0; /* Add vertical padding for better spacing */
+            display: flex;
+            justify-content: center; /* Center the content card horizontally */
+            align-items: center; /* Center the content card vertically */
         }
         
         /* Dot indicators */
@@ -154,21 +153,20 @@
         .dot.active {
             background-color: #e0e0e0;
         }
-
     </style>
 </head>
 
 <body id="mainBody"
-    class="main-bg h-screen w-screen p-4 flex flex-col items-center justify-center transition-all duration-700 ease-in-out">
+    class="main-bg min-h-screen w-full p-4 flex flex-col items-center justify-center transition-all duration-700 ease-in-out">
 
-    <div class="w-full max-w-xl mx-auto flex flex-col h-full">
-        <!-- Header Section -->
-        <header class="text-center mb-8 md:mb-12 flex-shrink-0">
+    <div class="w-full max-w-xl mx-auto">
+        <!-- Header Section (Original Layout) -->
+        <header class="text-center mb-8 md:mb-12">
             <h1 class="cinzel-font text-3xl md:text-4xl font-bold text-white tracking-wider">Permanent's<br>QR Generator
             </h1>
         </header>
 
-        <!-- License Section - Shown on first load if no license is found -->
+        <!-- License Section (Original Layout) -->
         <div id="licenseSection" class="max-w-lg mx-auto hidden">
             <h2 class="cinzel-font text-2xl font-bold text-white mb-4 text-center">Activate Your Product</h2>
             <form id="licenseForm" class="flex flex-col gap-4">
@@ -182,10 +180,10 @@
             <p id="licenseErrorMessage" class="text-red-400 text-center mt-2 h-4"></p>
         </div>
 
-        <!-- QR Generator Section - Hidden until license is validated -->
-        <div id="qrGeneratorSection" class="hidden flex flex-col flex-grow min-h-0">
+        <!-- QR Generator Section (Original Layout) -->
+        <div id="qrGeneratorSection" class="hidden">
             <!-- Input Form Section -->
-            <div class="mb-8 md:mb-12 max-w-lg mx-auto flex-shrink-0">
+            <div class="mb-8 md:mb-12 max-w-lg mx-auto">
                 <form id="qrForm" class="flex flex-col sm:flex-row gap-4">
                     <input type="text" id="nameInput" placeholder="Enter spectator's name, or leave it blank"
                         class="premium-input w-full px-4 py-3 rounded-lg text-white placeholder-gray-500 focus:ring-0">
@@ -195,29 +193,25 @@
                 <p id="errorMessage" class="text-red-400 text-center mt-2 h-4"></p>
             </div>
 
-            <!-- Output Section - Initially hidden -->
-            <div id="outputSection" class="hidden flex flex-col flex-grow min-h-0">
-                <div id="scrollWrapper" class="scroll-wrapper flex-grow">
-                     <!-- QR Code Display -->
-                    <div class="scroll-item flex justify-center items-center">
+            <!-- Output Section - This part is now horizontal -->
+            <div id="outputSection" class="hidden">
+                <div id="scrollWrapper" class="scroll-wrapper">
+                    <!-- QR Code Display -->
+                    <div class="scroll-item">
                         <div id="qrContainer"
                             class="output-container rounded-xl p-6 flex flex-col items-center justify-center w-full max-w-sm">
                             <h2 class="cinzel-font text-2xl font-bold text-white mb-4">Your QR Code</h2>
                             <div id="qrcode" class="bg-white p-4 rounded-lg shadow-lg"></div>
                             <p class="text-gray-400 mt-4 text-center text-sm">Click the QR code to make it fullscreen.</p>
-
-                            <!-- Share Buttons -->
                             <div id="shareButtonsContainer" class="mt-4 flex gap-4 hidden">
                                 <button id="shareQrButton"
                                     class="premium-button text-sm flex-1 text-white font-semibold px-4 py-2 rounded-lg flex items-center justify-center gap-2">
-                                    <img src="https://img.icons8.com/ios/50/ffffff/qr-code--v1.png" alt="Share QR Code"
-                                        class="w-5 h-5">
+                                    <img src="https://img.icons8.com/ios/50/ffffff/qr-code--v1.png" alt="Share QR Code" class="w-5 h-5">
                                     Share QR
                                 </button>
                                 <button id="shareLinkButton"
                                     class="premium-button text-sm flex-1 text-white font-semibold px-4 py-2 rounded-lg flex items-center justify-center gap-2">
-                                    <img src="https://img.icons8.com/sf-regular/48/ffffff/link.png" alt="Share Link"
-                                        class="w-5 h-5">
+                                    <img src="https://img.icons8.com/sf-regular/48/ffffff/link.png" alt="Share Link" class="w-5 h-5">
                                     Share Link
                                 </button>
                             </div>
@@ -226,7 +220,7 @@
                     </div>
 
                     <!-- Webpage Preview -->
-                    <div class="scroll-item flex justify-center items-center">
+                    <div class="scroll-item">
                         <div id="previewContainer" class="output-container rounded-xl p-6 flex flex-col w-full max-w-sm">
                             <h2 class="cinzel-font text-2xl font-bold text-white mb-4 text-center">Page Preview</h2>
                             <div class="w-full h-96 bg-black rounded-lg overflow-hidden border border-gray-700">
@@ -235,21 +229,21 @@
                         </div>
                     </div>
                 </div>
-                 <!-- Dot Indicators -->
+                <!-- Dot Indicators -->
                 <div id="dotsContainer" class="dots-container hidden">
                     <span class="dot active" data-index="0"></span>
                     <span class="dot" data-index="1"></span>
                 </div>
             </div>
 
-            <!-- Disclaimer Text -->
-            <p class="text-center text-xs text-gray-500 mt-auto pb-4 flex-shrink-0">This page is only used to generate a QR code for your
+            <!-- Disclaimer Text (Original Layout) -->
+            <p class="text-center text-xs text-gray-500 mt-12">This page is only used to generate a QR code for your
                 spectator. The actual routine does not require this app in play.</p>
         </div>
     </div>
 
     <!-- Fullscreen QR Modal -->
-    <div id="fullscreenModal" class="fixed inset-0 bg-black flex items-center justify-center hidden z-50 p-4">
+    <div id="fullscreenModal" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center hidden z-50 p-4">
         <img src="https://img.icons8.com/sf-black/64/ffffff/delete-sign.png" alt="Close" id="closeModalButton"
             class="absolute top-5 right-5 w-10 h-10 cursor-pointer">
         <div id="fullscreenQrContainer" class="p-4 bg-white rounded-lg">
@@ -333,63 +327,39 @@
             } }
         ];
 
-        /**
-         * Menampilkan antarmuka utama aplikasi QR generator.
-         */
         function showApp() {
             licenseSection.classList.add('hidden');
             qrGeneratorSection.classList.remove('hidden');
-            qrGeneratorSection.classList.add('flex');
         }
 
-        /**
-         * Menampilkan formulir pengajuan lisensi.
-         */
         function showLicenseForm() {
             qrGeneratorSection.classList.add('hidden');
-            qrGeneratorSection.classList.remove('flex');
             licenseSection.classList.remove('hidden');
         }
         
-        // PERUBAHAN: Fungsi isLicenseExpired() dihapus karena tidak lagi relevan.
-        // Cek offline yang tidak aman sudah dihilangkan.
-
-        /**
-         * Menginisialisasi Firebase dan memeriksa lisensi.
-         */
         async function initialize() {
             try {
-                // Inisialisasi Firebase
                 const app = initializeApp(firebaseConfig);
                 auth = getAuth(app);
                 db = getDatabase(app);
                 firestore = getFirestore(app);
                 await signInAnonymously(auth);
 
-                // PERUBAHAN: Logika validasi diubah total.
-                // Selalu periksa lisensi yang tersimpan di server (Firestore).
                 const localEmail = localStorage.getItem('permanentMagicEmail');
                 const localLicense = localStorage.getItem('permanentMagicLicenseCode');
 
                 if (localEmail && localLicense) {
-                    console.log("Menemukan lisensi lokal, memvalidasi ke server...");
                     const licenseDocRef = doc(firestore, "activatedLicenses", localEmail);
                     const docSnap = await getDoc(licenseDocRef);
 
                     if (docSnap.exists() && docSnap.data().licenseCode === localLicense) {
-                        // Lisensi valid di server
-                        console.log("Lisensi lokal valid di server. Memulai aplikasi.");
                         await startApp();
                     } else {
-                        // Lisensi lokal tidak valid atau tidak cocok
-                        console.log("Lisensi lokal tidak valid. Menampilkan form lisensi.");
                         localStorage.removeItem('permanentMagicEmail');
                         localStorage.removeItem('permanentMagicLicenseCode');
                         showLicenseForm();
                     }
                 } else {
-                    // Tidak ada lisensi lokal, tampilkan form
-                    console.log("Tidak ada lisensi lokal. Menampilkan form lisensi.");
                     showLicenseForm();
                 }
             } catch (error) {
@@ -399,10 +369,6 @@
             }
         }
 
-        /**
-         * Mengambil konfigurasi dari Firebase dan menampilkan aplikasi.
-         * Fungsi ini sekarang dipanggil setelah validasi berhasil.
-         */
         async function startApp() {
             try {
                 const configRef = ref(db, '/config');
@@ -411,9 +377,7 @@
                 if (snapshot.exists()) {
                     const data = snapshot.val();
                     currentURL = data.currentURL;
-                    if (!currentURL) {
-                        throw new Error("currentURL not found in database.");
-                    }
+                    if (!currentURL) throw new Error("currentURL not found in database.");
                     showApp();
                 } else {
                     throw new Error("Configuration not found in database.");
@@ -425,10 +389,6 @@
             }
         }
 
-        /**
-         * Menangani pengiriman formulir lisensi.
-         * @param {Event} e - Acara pengiriman formulir.
-         */
         async function handleLicenseSubmit(e) {
             e.preventDefault();
             const userLicense = licenseInput.value.trim();
@@ -444,7 +404,6 @@
             licenseErrorMessage.textContent = "";
 
             try {
-                // 1. Cek apakah lisensi ada di Realtime Database
                 const licensesRef = ref(db, '/licenseCodes');
                 const snapshot = await get(licensesRef);
 
@@ -462,7 +421,6 @@
                     }
 
                     if (matchFound) {
-                        // 2. Lisensi valid! Simpan ke Firestore sebagai lisensi teraktivasi.
                         const licenseDocRef = doc(firestore, "activatedLicenses", userEmail);
                         await setDoc(licenseDocRef, {
                             email: userEmail,
@@ -470,39 +428,29 @@
                             activatedAt: serverTimestamp()
                         });
 
-                        // 3. Hapus lisensi dari Realtime Database agar tidak bisa dipakai lagi.
                         const licenseToRemoveRef = ref(db, `/licenseCodes/${matchedKey}`);
                         await remove(licenseToRemoveRef);
 
-                        // 4. Simpan email dan lisensi ke localStorage untuk sesi berikutnya.
                         localStorage.setItem('permanentMagicEmail', userEmail);
                         localStorage.setItem('permanentMagicLicenseCode', userLicense);
                         
-                        // 5. Mulai aplikasi
                         await startApp();
 
                     } else {
-                        // Tidak ada kecocokan
                         licenseErrorMessage.textContent = "Invalid license code.";
-                        submitLicenseButton.disabled = false;
-                        submitLicenseButton.textContent = "Activate";
                     }
                 } else {
                     licenseErrorMessage.textContent = "No licenses available. Please contact support.";
-                    submitLicenseButton.disabled = false;
-                    submitLicenseButton.textContent = "Activate";
                 }
             } catch (error) {
                 console.error("License validation failed:", error);
                 licenseErrorMessage.textContent = "Error checking license. Please try again.";
-                submitLicenseButton.disabled = false;
-                submitLicenseButton.textContent = "Activate";
+            } finally {
+                 submitLicenseButton.disabled = false;
+                 submitLicenseButton.textContent = "Activate";
             }
         }
 
-        /**
-         * A helper function to draw text on a canvas with automatic line breaks.
-         */
         function wrapText(context, text, x, y, maxWidth, lineHeight) {
             let words = text.split(' ');
             let line = '';
@@ -524,9 +472,6 @@
             return currentY;
         }
 
-        /**
-         * Draws the static preview of the symbol page on the preview canvas.
-         */
         function drawPreview(spectatorName) {
             const previewCtx = previewCanvas.getContext('2d');
             const dpr = window.devicePixelRatio || 1;
@@ -597,9 +542,6 @@
             });
         }
 
-        /**
-         * Encodes a string using a custom substitution cipher.
-         */
         function customEncode(text) {
             const charMap = {
                 'a': '@', 'b': '8', 'c': '[', 'd': ')', 'e': '3',
@@ -619,10 +561,6 @@
             return encoded;
         }
 
-        /**
-         * Displays the QR code in fullscreen mode.
-         * @param {string} url - The URL to encode in the fullscreen QR code.
-         */
         function showFullscreenQR(url) {
             fullscreenQrContainer.innerHTML = '';
             const size = Math.min(window.innerWidth, window.innerHeight) * 0.8;
@@ -638,17 +576,9 @@
             });
         }
 
-        /**
-         * Handles the form submission to generate the QR code and update the preview.
-         */
         async function handleGenerate(e) {
             e.preventDefault();
-            let spectatorName = nameInput.value.trim();
-
-            if (!spectatorName) {
-                spectatorName = "Guest";
-            }
-
+            let spectatorName = nameInput.value.trim() || "Guest";
             const formattedName = spectatorName.charAt(0).toUpperCase() + spectatorName.slice(1);
 
             errorMessage.textContent = '';
@@ -670,16 +600,15 @@
                 }
                 qrCanvasElement = canvas;
                 qrcodeContainer.appendChild(canvas);
-
-                showFullscreenQR(generatedUrl);
             });
 
+            // Change body alignment from center to top
             mainBody.classList.remove('justify-center');
             mainBody.classList.add('justify-start', 'pt-8', 'md:pt-12');
+            
+            // Show the output section
             outputSection.classList.remove('hidden');
-            outputSection.classList.add('flex');
             dotsContainer.classList.remove('hidden');
-
 
             requestAnimationFrame(() => {
                 drawPreview(formattedName);
@@ -687,22 +616,17 @@
                     qrContainer.classList.add('visible');
                     previewContainer.classList.add('visible');
                     shareButtonsContainer.classList.remove('hidden');
-                }, 50);
+                }, 50); // Small delay for transition
             });
         }
         
-        // --- Scroll and Dot Indicator Logic ---
         function updateDots() {
             const scrollLeft = scrollWrapper.scrollLeft;
             const width = scrollWrapper.clientWidth;
             const activeIndex = Math.round(scrollLeft / width);
 
             dots.forEach((dot, index) => {
-                if (index === activeIndex) {
-                    dot.classList.add('active');
-                } else {
-                    dot.classList.remove('active');
-                }
+                dot.classList.toggle('active', index === activeIndex);
             });
         }
 
@@ -711,15 +635,13 @@
         dots.forEach(dot => {
             dot.addEventListener('click', () => {
                 const index = parseInt(dot.dataset.index);
-                const scrollLeft = index * scrollWrapper.clientWidth;
                 scrollWrapper.scrollTo({
-                    left: scrollLeft,
+                    left: index * scrollWrapper.clientWidth,
                     behavior: 'smooth'
                 });
             });
         });
 
-        // --- Share and Copy Logic ---
         shareLinkButton.addEventListener('click', async () => {
             if (!generatedUrl) return;
             copyMessage.textContent = '';
@@ -774,35 +696,26 @@
             }, 'image/png');
         });
 
-        // --- Modal Logic ---
         qrcodeContainer.addEventListener('click', () => {
-            if (generatedUrl) {
-                showFullscreenQR(generatedUrl);
-            }
+            if (generatedUrl) showFullscreenQR(generatedUrl);
         });
 
-        closeModalButton.addEventListener('click', () => {
-            fullscreenModal.classList.add('hidden');
-        });
+        closeModalButton.addEventListener('click', () => fullscreenModal.classList.add('hidden'));
 
         fullscreenModal.addEventListener('click', (e) => {
-            if (e.target === fullscreenModal) {
-                fullscreenModal.classList.add('hidden');
-            }
+            if (e.target === fullscreenModal) fullscreenModal.classList.add('hidden');
         });
 
-        // --- Event Listeners ---
         licenseForm.addEventListener('submit', handleLicenseSubmit);
         qrForm.addEventListener('submit', handleGenerate);
 
-        // --- Start the application ---
         initialize();
     </script>
     <!-- Skrip Pendaftaran Service Worker -->
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/service-worker.js');
+                navigator.serviceWorker.register('/service-worker.js').catch(err => console.log('Service worker registration failed: ', err));
             });
         }
     </script>
