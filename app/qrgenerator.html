@@ -120,7 +120,7 @@
         .scroll-item {
             flex: 0 0 100%;
             scroll-snap-align: center;
-            padding: 1rem 0;
+            padding: 0.5rem 0; /* Reduced vertical padding */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -129,7 +129,7 @@
         /* === DOT INDICATOR STYLES === */
         .dots-container {
             text-align: center;
-            padding-top: 10px;
+            padding-bottom: 10px; /* Space between dots and slider */
         }
 
         .dot {
@@ -187,7 +187,13 @@
             </div>
 
             <!-- Horizontal Slider Output -->
-            <div id="outputSection" class="hidden">
+            <div id="outputSection" class="hidden mb-4">
+                <!-- Dot Indicators (New Position) -->
+                <div id="dotsContainer" class="dots-container hidden">
+                    <span class="dot active" data-index="0"></span>
+                    <span class="dot" data-index="1"></span>
+                </div>
+                <!-- Slider Wrapper -->
                 <div id="scrollWrapper" class="scroll-wrapper">
                     <!-- QR Code Card -->
                     <div class="scroll-item">
@@ -212,26 +218,21 @@
                     <div class="scroll-item">
                         <div id="previewContainer" class="output-container rounded-xl p-6 flex flex-col w-full max-w-sm">
                             <h2 class="cinzel-font text-2xl font-bold text-white mb-4 text-center">Page Preview</h2>
-                            <div class="w-full h-96 bg-black rounded-lg overflow-hidden border border-gray-700">
+                            <div class="w-full h-80 bg-black rounded-lg overflow-hidden border border-gray-700">
                                 <canvas id="previewCanvas" class="w-full h-full"></canvas>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- Dot Indicators -->
-                <div id="dotsContainer" class="dots-container hidden">
-                    <span class="dot active" data-index="0"></span>
-                    <span class="dot" data-index="1"></span>
-                </div>
             </div>
 
             <!-- Disclaimer -->
-            <p class="text-center text-xs text-gray-500 mt-12">This page is only used to generate a QR code for your spectator. The actual routine does not require this app in play.</p>
+            <p id="disclaimerText" class="text-center text-xs text-gray-500 mt-12">This page is only used to generate a QR code for your spectator. The actual routine does not require this app in play.</p>
         </div>
     </div>
 
-    <!-- Fullscreen QR Modal -->
-    <div id="fullscreenModal" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center hidden z-50 p-4">
+    <!-- Fullscreen QR Modal (Solid Black Background) -->
+    <div id="fullscreenModal" class="fixed inset-0 bg-black flex items-center justify-center hidden z-50 p-4">
         <img src="https://img.icons8.com/sf-black/64/ffffff/delete-sign.png" alt="Close" id="closeModalButton" class="absolute top-5 right-5 w-10 h-10 cursor-pointer">
         <div id="fullscreenQrContainer" class="p-4 bg-white rounded-lg"></div>
     </div>
@@ -282,6 +283,7 @@
         const scrollWrapper = document.getElementById('scrollWrapper');
         const dotsContainer = document.getElementById('dotsContainer');
         const dots = document.querySelectorAll('.dot');
+        const disclaimerText = document.getElementById('disclaimerText');
 
         const symbols = [
             { name: 'Circle', draw: (c, x, y, s) => { c.arc(x, y, s * 0.35, 0, Math.PI * 2); } },
@@ -489,6 +491,7 @@
             
             outputSection.classList.remove('hidden');
             dotsContainer.classList.remove('hidden');
+            disclaimerText.classList.add('hidden'); // Hide disclaimer
 
             requestAnimationFrame(() => {
                 drawPreview(formattedName);
