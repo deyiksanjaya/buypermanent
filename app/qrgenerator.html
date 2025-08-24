@@ -120,7 +120,6 @@
         .scroll-item {
             flex: 0 0 100%;
             scroll-snap-align: center;
-            padding: 0.5rem 0; /* Reduced vertical padding */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -152,9 +151,9 @@
 <body id="mainBody"
     class="main-bg w-full h-full p-4 flex flex-col items-center justify-center transition-all duration-700 ease-in-out">
 
-    <div class="w-full max-w-xl mx-auto">
+    <div class="w-full max-w-xl mx-auto flex flex-col h-full">
         <!-- Header Section -->
-        <header class="text-center mb-8 md:mb-12">
+        <header class="text-center mb-8 md:mb-12 flex-shrink-0">
             <h1 class="cinzel-font text-3xl md:text-4xl font-bold text-white tracking-wider">Permanent's<br>QR Generator
             </h1>
         </header>
@@ -174,9 +173,9 @@
         </div>
 
         <!-- QR Generator Section -->
-        <div id="qrGeneratorSection" class="hidden">
+        <div id="qrGeneratorSection" class="hidden flex flex-col flex-grow min-h-0">
             <!-- Input Form -->
-            <div class="mb-8 md:mb-12 max-w-lg mx-auto">
+            <div class="mb-8 md:mb-12 max-w-lg mx-auto flex-shrink-0">
                 <form id="qrForm" class="flex flex-col sm:flex-row gap-4">
                     <input type="text" id="nameInput" placeholder="Enter spectator's name, or leave it blank"
                         class="premium-input w-full px-4 py-3 rounded-lg text-white placeholder-gray-500 focus:ring-0">
@@ -187,14 +186,14 @@
             </div>
 
             <!-- Horizontal Slider Output -->
-            <div id="outputSection" class="hidden mb-4">
+            <div id="outputSection" class="hidden flex-grow flex flex-col min-h-0">
                 <!-- Dot Indicators (New Position) -->
-                <div id="dotsContainer" class="dots-container hidden">
+                <div id="dotsContainer" class="dots-container hidden flex-shrink-0">
                     <span class="dot active" data-index="0"></span>
                     <span class="dot" data-index="1"></span>
                 </div>
                 <!-- Slider Wrapper -->
-                <div id="scrollWrapper" class="scroll-wrapper">
+                <div id="scrollWrapper" class="scroll-wrapper flex-grow">
                     <!-- QR Code Card -->
                     <div class="scroll-item">
                         <div id="qrContainer"
@@ -218,7 +217,7 @@
                     <div class="scroll-item">
                         <div id="previewContainer" class="output-container rounded-xl p-6 flex flex-col w-full max-w-sm">
                             <h2 class="cinzel-font text-2xl font-bold text-white mb-4 text-center">Page Preview</h2>
-                            <div class="w-full h-80 bg-black rounded-lg overflow-hidden border border-gray-700">
+                            <div class="w-full h-72 bg-black rounded-lg overflow-hidden border border-gray-700">
                                 <canvas id="previewCanvas" class="w-full h-full"></canvas>
                             </div>
                         </div>
@@ -227,7 +226,7 @@
             </div>
 
             <!-- Disclaimer -->
-            <p id="disclaimerText" class="text-center text-xs text-gray-500 mt-12">This page is only used to generate a QR code for your spectator. The actual routine does not require this app in play.</p>
+            <p id="disclaimerText" class="text-center text-xs text-gray-500 mt-auto flex-shrink-0 pb-2">This page is only used to generate a QR code for your spectator. The actual routine does not require this app in play.</p>
         </div>
     </div>
 
@@ -487,7 +486,7 @@
             });
             
             mainBody.classList.remove('justify-center');
-            mainBody.classList.add('justify-start', 'pt-8');
+            mainBody.classList.add('justify-start');
             
             outputSection.classList.remove('hidden');
             dotsContainer.classList.remove('hidden');
