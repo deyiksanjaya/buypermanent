@@ -154,6 +154,32 @@
         .dot.active {
             background-color: #e0e0e0;
         }
+
+        /* === CHECKLIST MODAL STYLES === */
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            color: #9ca3af; /* gray-400 */
+            transition: color 0.3s ease;
+        }
+        .checklist-item.completed {
+            color: #e5e7eb; /* gray-200 */
+        }
+        .checklist-item .icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+            stroke-width: 2;
+            transition: all 0.3s ease;
+        }
+        .checklist-item .pending-icon {
+            stroke: #6b7280; /* gray-500 */
+        }
+        .checklist-item .completed-icon {
+            stroke: #34d399; /* green-400 */
+            transform: scale(1);
+        }
     </style>
 </head>
 
@@ -162,81 +188,100 @@
 
     <div class="w-full max-w-xl mx-auto flex flex-col h-full">
         <!-- Header Section -->
-        <header class="text-center mb-8 md:mb-12 flex-shrink-0">
+        <header id="headerSection" class="text-center mb-8 md:mb-12 flex-shrink-0">
             <h1 class="cinzel-font text-3xl md:text-4xl font-bold text-white tracking-wider">Permanent's<br>QR Generator
             </h1>
         </header>
 
-        <!-- License Section -->
-        <div id="licenseSection" class="max-w-lg mx-auto">
-            <h2 class="cinzel-font text-2xl font-bold text-white mb-4 text-center">Activate Your Product</h2>
-            <form id="licenseForm" class="flex flex-col gap-4">
-                <input type="email" id="emailInput" placeholder="Enter your email..."
-                    class="premium-input w-full px-4 py-3 rounded-lg text-white placeholder-gray-500 focus:ring-0" required>
-                <input type="text" id="licenseInput" placeholder="Enter your license code..."
-                    class="premium-input center-text-input w-full px-4 py-3 rounded-lg text-white placeholder-gray-500 focus:ring-0" required>
-                <button type="submit" id="submitLicenseButton"
-                    class="premium-button text-white font-semibold px-6 py-3 rounded-lg">Activate</button>
-            </form>
-            <p id="licenseErrorMessage" class="text-red-400 text-center mt-2 h-4"></p>
-        </div>
+        <!-- Main Content Area -->
+        <main id="mainContent" class="flex-grow relative flex flex-col justify-center">
+            <!-- Initializing Modal -->
+            <div id="initializingModal" class="absolute inset-0 bg-black bg-opacity-80 flex flex-col items-center justify-center z-10">
+                <div class="w-48">
+                    <div id="check-step-1" class="checklist-item">
+                        <svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <!-- Icon will be injected by JS -->
+                        </svg>
+                        <span>Checking License</span>
+                    </div>
+                    <div id="check-step-2" class="checklist-item">
+                        <svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <!-- Icon will be injected by JS -->
+                        </svg>
+                        <span>Verifying</span>
+                    </div>
+                </div>
+            </div>
 
-        <!-- QR Generator Section -->
-        <div id="qrGeneratorSection" class="hidden flex flex-col flex-grow min-h-0">
-            <!-- Input Form -->
-            <div class="mb-8 md:mb-12 max-w-lg mx-auto flex-shrink-0">
-                <form id="qrForm" class="flex flex-col sm:flex-row gap-4">
-                    <input type="text" id="nameInput" placeholder="Enter spectator's name"
-                        class="premium-input center-text-input w-full px-4 py-3 rounded-lg text-white placeholder-gray-500 focus:ring-0">
-                    <button type="submit" id="generateButton"
-                        class="premium-button text-white font-semibold px-6 py-3 rounded-lg whitespace-nowrap">Generate</button>
+            <!-- License Section (Hidden by default) -->
+            <div id="licenseSection" class="max-w-lg mx-auto hidden">
+                <h2 class="cinzel-font text-2xl font-bold text-white mb-4 text-center">Activate Your Product</h2>
+                <form id="licenseForm" class="flex flex-col gap-4">
+                    <input type="email" id="emailInput" placeholder="Enter your email..."
+                        class="premium-input w-full px-4 py-3 rounded-lg text-white placeholder-gray-500 focus:ring-0" required>
+                    <input type="text" id="licenseInput" placeholder="Enter your license code..."
+                        class="premium-input center-text-input w-full px-4 py-3 rounded-lg text-white placeholder-gray-500 focus:ring-0" required>
+                    <button type="submit" id="submitLicenseButton"
+                        class="premium-button text-white font-semibold px-6 py-3 rounded-lg">Activate</button>
                 </form>
-                <p id="errorMessage" class="text-red-400 text-center mt-2 h-4"></p>
+                <p id="licenseErrorMessage" class="text-red-400 text-center mt-2 h-4"></p>
             </div>
 
-            <!-- Horizontal Slider Output -->
-            <div id="outputSection" class="hidden flex-grow flex flex-col min-h-0">
-                <!-- Dot Indicators (New Position) -->
-                <div id="dotsContainer" class="dots-container hidden flex-shrink-0">
-                    <span class="dot active" data-index="0"></span>
-                    <span class="dot" data-index="1"></span>
+            <!-- QR Generator Section (Hidden by default) -->
+            <div id="qrGeneratorSection" class="hidden flex flex-col flex-grow min-h-0">
+                <!-- Input Form -->
+                <div class="mb-8 md:mb-12 max-w-lg mx-auto flex-shrink-0">
+                    <form id="qrForm" class="flex flex-col sm:flex-row gap-4">
+                        <input type="text" id="nameInput" placeholder="Enter spectator's name"
+                            class="premium-input center-text-input w-full px-4 py-3 rounded-lg text-white placeholder-gray-500 focus:ring-0">
+                        <button type="submit" id="generateButton"
+                            class="premium-button text-white font-semibold px-6 py-3 rounded-lg whitespace-nowrap">Generate</button>
+                    </form>
+                    <p id="errorMessage" class="text-red-400 text-center mt-2 h-4"></p>
                 </div>
-                <!-- Slider Wrapper -->
-                <div id="scrollWrapper" class="scroll-wrapper flex-grow">
-                    <!-- QR Code Card -->
-                    <div class="scroll-item">
-                        <div id="qrContainer"
-                            class="output-container rounded-xl p-6 flex flex-col items-center justify-center w-full max-w-sm">
-                            <h2 class="cinzel-font text-2xl font-bold text-white mb-4">Your QR Code</h2>
-                            <div id="qrcode" class="bg-white p-4 rounded-lg shadow-lg"></div>
-                            <p class="text-gray-400 mt-4 text-center text-sm">Click the QR code to make it fullscreen.</p>
-                            <div id="shareButtonsContainer" class="mt-4 flex gap-4">
-                                <button id="shareQrButton" class="premium-button text-sm flex-1 text-white font-semibold px-4 py-2 rounded-lg flex items-center justify-center gap-2">
-                                    <img src="https://img.icons8.com/ios/50/ffffff/qr-code--v1.png" alt="Share QR Code" class="w-5 h-5"> Share QR
-                                </button>
-                                <button id="shareLinkButton" class="premium-button text-sm flex-1 text-white font-semibold px-4 py-2 rounded-lg flex items-center justify-center gap-2">
-                                    <img src="https://img.icons8.com/sf-regular/48/ffffff/link.png" alt="Share Link" class="w-5 h-5"> Share Link
-                                </button>
-                            </div>
-                            <p id="copyMessage" class="text-green-400 text-center mt-2 h-4 text-sm"></p>
-                        </div>
-                    </div>
 
-                    <!-- Webpage Preview Card -->
-                    <div class="scroll-item">
-                        <div id="previewContainer" class="output-container rounded-xl p-6 flex flex-col items-center justify-center w-full max-w-sm">
-                            <h2 class="cinzel-font text-2xl font-bold text-white mb-4 text-center">Page Preview</h2>
-                            <div class="w-full h-full max-h-72 bg-black rounded-lg overflow-hidden border border-gray-700">
-                                <canvas id="previewCanvas" class="w-full h-full"></canvas>
+                <!-- Horizontal Slider Output -->
+                <div id="outputSection" class="hidden flex-grow flex flex-col min-h-0">
+                    <!-- Dot Indicators -->
+                    <div id="dotsContainer" class="dots-container hidden flex-shrink-0">
+                        <span class="dot active" data-index="0"></span>
+                        <span class="dot" data-index="1"></span>
+                    </div>
+                    <!-- Slider Wrapper -->
+                    <div id="scrollWrapper" class="scroll-wrapper flex-grow">
+                        <!-- QR Code Card -->
+                        <div class="scroll-item">
+                            <div id="qrContainer"
+                                class="output-container rounded-xl p-6 flex flex-col items-center justify-center w-full max-w-sm">
+                                <h2 class="cinzel-font text-2xl font-bold text-white mb-4">Your QR Code</h2>
+                                <div id="qrcode" class="bg-white p-4 rounded-lg shadow-lg"></div>
+                                <p class="text-gray-400 mt-4 text-center text-sm">Click the QR code to make it fullscreen.</p>
+                                <div id="shareButtonsContainer" class="mt-4 flex gap-4">
+                                    <button id="shareQrButton" class="premium-button text-sm flex-1 text-white font-semibold px-4 py-2 rounded-lg flex items-center justify-center gap-2">
+                                        <img src="https://img.icons8.com/ios/50/ffffff/qr-code--v1.png" alt="Share QR Code" class="w-5 h-5"> Share QR
+                                    </button>
+                                    <button id="shareLinkButton" class="premium-button text-sm flex-1 text-white font-semibold px-4 py-2 rounded-lg flex items-center justify-center gap-2">
+                                        <img src="https://img.icons8.com/sf-regular/48/ffffff/link.png" alt="Share Link" class="w-5 h-5"> Share Link
+                                    </button>
+                                </div>
+                                <p id="copyMessage" class="text-green-400 text-center mt-2 h-4 text-sm"></p>
+                            </div>
+                        </div>
+                        <!-- Webpage Preview Card -->
+                        <div class="scroll-item">
+                            <div id="previewContainer" class="output-container rounded-xl p-6 flex flex-col items-center justify-center w-full max-w-sm">
+                                <h2 class="cinzel-font text-2xl font-bold text-white mb-4 text-center">Page Preview</h2>
+                                <div class="w-full h-full max-h-72 bg-black rounded-lg overflow-hidden border border-gray-700">
+                                    <canvas id="previewCanvas" class="w-full h-full"></canvas>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <!-- Disclaimer -->
+                <p id="disclaimerText" class="hidden text-center text-xs text-gray-500 mt-auto flex-shrink-0 pb-2">This page is only used to generate a QR code for your spectator. The actual routine does not require this app in play.</p>
             </div>
-
-            <!-- Disclaimer -->
-            <p id="disclaimerText" class="hidden text-center text-xs text-gray-500 mt-auto flex-shrink-0 pb-2">This page is only used to generate a QR code for your spectator. The actual routine does not require this app in play.</p>
-        </div>
+        </main>
     </div>
 
     <!-- Fullscreen QR Modal (Solid Black Background) -->
@@ -268,6 +313,9 @@
         let qrCanvasElement = null;
 
         const mainBody = document.getElementById('mainBody');
+        const mainContent = document.getElementById('mainContent');
+        const headerSection = document.getElementById('headerSection');
+        const initializingModal = document.getElementById('initializingModal');
         const licenseSection = document.getElementById('licenseSection');
         const licenseForm = document.getElementById('licenseForm');
         const emailInput = document.getElementById('emailInput');
@@ -301,19 +349,41 @@
             { name: 'Star', draw: (c, x, y, s) => { c.moveTo(x, y - s * 0.35); for (let i = 1; i < 5; i++) { c.lineTo(x + Math.sin(i * 0.8 * Math.PI) * s * 0.35, y - Math.cos(i * 0.8 * Math.PI) * s * 0.35); } c.closePath(); } }
         ];
 
+        const iconPending = `<circle cx="12" cy="12" r="10" class="pending-icon" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="2, 4" />`;
+        const iconCompleted = `<path class="completed-icon" stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />`;
+
+        function updateChecklist(step, isComplete) {
+            const item = document.getElementById(`check-step-${step}`);
+            if (item) {
+                const icon = item.querySelector('.icon');
+                if (isComplete) {
+                    item.classList.add('completed');
+                    icon.innerHTML = iconCompleted;
+                } else {
+                    item.classList.remove('completed');
+                    icon.innerHTML = iconPending;
+                }
+            }
+        }
+
         function showApp() {
-            mainBody.classList.remove('justify-center');
+            initializingModal.classList.add('hidden');
+            mainContent.classList.remove('justify-center');
             licenseSection.classList.add('hidden');
             qrGeneratorSection.classList.remove('hidden');
         }
 
         function showLicenseForm() {
-            mainBody.classList.add('justify-center');
+            initializingModal.classList.add('hidden');
+            mainContent.classList.add('justify-center');
             qrGeneratorSection.classList.add('hidden');
             licenseSection.classList.remove('hidden');
         }
         
         async function initialize() {
+            updateChecklist(1, false);
+            updateChecklist(2, false);
+
             try {
                 const app = initializeApp(firebaseConfig);
                 auth = getAuth(app);
@@ -323,10 +393,13 @@
 
                 const localEmail = localStorage.getItem('permanentMagicEmail');
                 const localLicense = localStorage.getItem('permanentMagicLicenseCode');
+                updateChecklist(1, true);
 
                 if (localEmail && localLicense) {
                     const licenseDocRef = doc(firestore, "activatedLicenses", localEmail);
                     const docSnap = await getDoc(licenseDocRef);
+                    updateChecklist(2, true);
+
                     if (docSnap.exists() && docSnap.data().licenseCode === localLicense) {
                         await startApp();
                     } else {
@@ -335,12 +408,12 @@
                         showLicenseForm();
                     }
                 } else {
+                    updateChecklist(2, true); // Mark as complete even if skipped
                     showLicenseForm();
                 }
             } catch (error) {
                 console.error("Initialization failed:", error);
-                licenseErrorMessage.textContent = "Error: Could not connect to server.";
-                showLicenseForm();
+                showLicenseForm(); // Fallback to license form on major error
             }
         }
 
@@ -358,7 +431,6 @@
                 }
             } catch (error) {
                 console.error("App startup failed:", error);
-                licenseErrorMessage.textContent = "Error: Could not load app configuration.";
                 showLicenseForm();
             }
         }
@@ -389,7 +461,14 @@
                         await remove(ref(db, `/licenseCodes/${matchedKey}`));
                         localStorage.setItem('permanentMagicEmail', userEmail);
                         localStorage.setItem('permanentMagicLicenseCode', userLicense);
+                        
+                        licenseSection.classList.add('hidden');
+                        initializingModal.classList.remove('hidden');
+                        updateChecklist(1, true);
+                        updateChecklist(2, true);
+                        
                         await startApp();
+
                     } else {
                         licenseErrorMessage.textContent = "Invalid license code.";
                     }
