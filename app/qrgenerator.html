@@ -200,7 +200,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getDatabase, ref, get, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-        import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         // Your web app's Firebase configuration
         const firebaseConfig = {
@@ -218,7 +218,6 @@
         let currentURL = '';
         let generatedUrl = null;
         let qrCanvasElement = null;
-        const LICENSE_VALIDITY_DAYS = 30; // Kustomisasi: Berapa hari lisensi dianggap "valid" secara lokal
 
         // --- DOM Element References ---
         const mainBody = document.getElementById('mainBody');
@@ -283,21 +282,9 @@
             qrGeneratorSection.classList.add('hidden');
             licenseSection.classList.remove('hidden');
         }
-
-        /**
-         * Menghitung apakah timestamp validasi lisensi sudah kedaluwarsa.
-         * @returns {boolean} True jika sudah kedaluwarsa atau tidak ada timestamp.
-         */
-        function isLicenseExpired() {
-            const lastValidationTimestamp = localStorage.getItem('lastValidationTimestamp');
-            if (!lastValidationTimestamp) {
-                return true; // Anggap kedaluwarsa jika tidak ada timestamp
-            }
-            const now = new Date().getTime();
-            const lastChecked = parseInt(lastValidationTimestamp);
-            const daysSinceLastCheck = (now - lastChecked) / (1000 * 60 * 60 * 24);
-            return daysSinceLastCheck > LICENSE_VALIDITY_DAYS;
-        }
+        
+        // PERUBAHAN: Fungsi isLicenseExpired() dihapus karena tidak lagi relevan.
+        // Cek offline yang tidak aman sudah dihilangkan.
 
         /**
          * Menginisialisasi Firebase dan memeriksa lisensi.
@@ -311,23 +298,31 @@
                 firestore = getFirestore(app);
                 await signInAnonymously(auth);
 
+                // PERUBAHAN: Logika validasi diubah total.
+                // Selalu periksa lisensi yang tersimpan di server (Firestore).
+                const localEmail = localStorage.getItem('permanentMagicEmail');
                 const localLicense = localStorage.getItem('permanentMagicLicenseCode');
 
-                if (localLicense && !isLicenseExpired()) {
-                    // Jika lisensi ada dan belum kedaluwarsa secara lokal, langsung tampilkan aplikasi
-                    // Ini memungkinkan aplikasi berfungsi offline.
-                    console.log("Lisensi lokal valid, memuat aplikasi tanpa memeriksa Firebase.");
-                    const configRef = ref(db, '/config');
-                    const snapshot = await get(configRef);
-                    if (snapshot.exists()) {
-                        const data = snapshot.val();
-                        currentURL = data.currentURL;
+                if (localEmail && localLicense) {
+                    console.log("Menemukan lisensi lokal, memvalidasi ke server...");
+                    const licenseDocRef = doc(firestore, "activatedLicenses", localEmail);
+                    const docSnap = await getDoc(licenseDocRef);
+
+                    if (docSnap.exists() && docSnap.data().licenseCode === localLicense) {
+                        // Lisensi valid di server
+                        console.log("Lisensi lokal valid di server. Memulai aplikasi.");
+                        await startApp();
+                    } else {
+                        // Lisensi lokal tidak valid atau tidak cocok
+                        console.log("Lisensi lokal tidak valid. Menampilkan form lisensi.");
+                        localStorage.removeItem('permanentMagicEmail');
+                        localStorage.removeItem('permanentMagicLicenseCode');
+                        showLicenseForm();
                     }
-                    showApp();
                 } else {
-                    // Jika lisensi tidak ada atau sudah kedaluwarsa, lakukan validasi ke Firebase
-                    console.log("Lisensi tidak ada atau kedaluwarsa, memeriksa ke Firebase...");
-                    await validateAndStartApp();
+                    // Tidak ada lisensi lokal, tampilkan form
+                    console.log("Tidak ada lisensi lokal. Menampilkan form lisensi.");
+                    showLicenseForm();
                 }
             } catch (error) {
                 console.error("Initialization failed:", error);
@@ -337,9 +332,10 @@
         }
 
         /**
-         * Mengambil konfigurasi dari Firebase dan memulai aplikasi jika lisensi valid.
+         * Mengambil konfigurasi dari Firebase dan menampilkan aplikasi.
+         * Fungsi ini sekarang dipanggil setelah validasi berhasil.
          */
-        async function validateAndStartApp() {
+        async function startApp() {
             try {
                 const configRef = ref(db, '/config');
                 const snapshot = await get(configRef);
@@ -350,15 +346,13 @@
                     if (!currentURL) {
                         throw new Error("currentURL not found in database.");
                     }
-                    // Perbarui timestamp validasi terakhir
-                    localStorage.setItem('lastValidationTimestamp', new Date().getTime());
                     showApp();
                 } else {
                     throw new Error("Configuration not found in database.");
                 }
             } catch (error) {
                 console.error("App startup failed:", error);
-                errorMessage.textContent = "Error: Could not load app configuration.";
+                licenseErrorMessage.textContent = "Error: Could not load app configuration.";
                 showLicenseForm();
             }
         }
@@ -382,6 +376,7 @@
             licenseErrorMessage.textContent = "";
 
             try {
+                // 1. Cek apakah lisensi ada di Realtime Database
                 const licensesRef = ref(db, '/licenseCodes');
                 const snapshot = await get(licensesRef);
 
@@ -399,7 +394,7 @@
                     }
 
                     if (matchFound) {
-                        // Lisensi valid!
+                        // 2. Lisensi valid! Simpan ke Firestore sebagai lisensi teraktivasi.
                         const licenseDocRef = doc(firestore, "activatedLicenses", userEmail);
                         await setDoc(licenseDocRef, {
                             email: userEmail,
@@ -407,14 +402,16 @@
                             activatedAt: serverTimestamp()
                         });
 
+                        // 3. Hapus lisensi dari Realtime Database agar tidak bisa dipakai lagi.
                         const licenseToRemoveRef = ref(db, `/licenseCodes/${matchedKey}`);
                         await remove(licenseToRemoveRef);
 
+                        // 4. Simpan email dan lisensi ke localStorage untuk sesi berikutnya.
+                        localStorage.setItem('permanentMagicEmail', userEmail);
                         localStorage.setItem('permanentMagicLicenseCode', userLicense);
-                        // Perbarui timestamp validasi terakhir saat aktivasi berhasil
-                        localStorage.setItem('lastValidationTimestamp', new Date().getTime());
-
-                        await validateAndStartApp();
+                        
+                        // 5. Mulai aplikasi
+                        await startApp();
 
                     } else {
                         // Tidak ada kecocokan
