@@ -29,11 +29,20 @@
 
     <style>
         /* Custom styles to match the premium, mystical theme */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Disable scrolling on the entire page */
+            -webkit-user-select: none; /* Safari */
+            -ms-user-select: none; /* IE 10+ */
+            user-select: none; /* Standard syntax */
+        }
+
         body {
             font-family: 'Inter', sans-serif;
             background-color: #000;
             color: #e0e0e0;
-            overflow-x: hidden;
         }
 
         .cinzel-font {
@@ -92,6 +101,7 @@
             transform: translateY(20px);
             transition: opacity 0.5s ease, transform 0.5s ease;
             visibility: hidden;
+            flex: 0 0 100%; /* Each container takes full width of the scroller */
         }
 
         .output-container.visible {
@@ -103,15 +113,57 @@
         #qrcode {
             cursor: pointer;
         }
+
+        /* Horizontal scroll container */
+        .scroll-wrapper {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch; /* for smooth scrolling on iOS */
+            scrollbar-width: none; /* Firefox */
+        }
+
+        .scroll-wrapper::-webkit-scrollbar {
+            display: none; /* Safari and Chrome */
+        }
+
+        .scroll-item {
+            scroll-snap-align: center;
+            flex: 0 0 100%;
+            width: 100%;
+            padding: 0 1rem; /* Add some spacing between items if needed */
+        }
+        
+        /* Dot indicators */
+        .dots-container {
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        .dot {
+            cursor: pointer;
+            height: 10px;
+            width: 10px;
+            margin: 0 4px;
+            background-color: #4a4a4a;
+            border-radius: 50%;
+            display: inline-block;
+            transition: background-color 0.3s ease;
+        }
+
+        .dot.active {
+            background-color: #e0e0e0;
+        }
+
     </style>
 </head>
 
 <body id="mainBody"
-    class="main-bg min-h-screen w-full p-4 flex flex-col items-center justify-center transition-all duration-700 ease-in-out">
+    class="main-bg h-screen w-screen p-4 flex flex-col items-center justify-center transition-all duration-700 ease-in-out">
 
-    <div class="w-full max-w-xl mx-auto">
+    <div class="w-full max-w-xl mx-auto flex flex-col h-full">
         <!-- Header Section -->
-        <header class="text-center mb-8 md:mb-12">
+        <header class="text-center mb-8 md:mb-12 flex-shrink-0">
             <h1 class="cinzel-font text-3xl md:text-4xl font-bold text-white tracking-wider">Permanent's<br>QR Generator
             </h1>
         </header>
@@ -131,9 +183,9 @@
         </div>
 
         <!-- QR Generator Section - Hidden until license is validated -->
-        <div id="qrGeneratorSection" class="hidden">
+        <div id="qrGeneratorSection" class="hidden flex flex-col flex-grow min-h-0">
             <!-- Input Form Section -->
-            <div class="mb-8 md:mb-12 max-w-lg mx-auto">
+            <div class="mb-8 md:mb-12 max-w-lg mx-auto flex-shrink-0">
                 <form id="qrForm" class="flex flex-col sm:flex-row gap-4">
                     <input type="text" id="nameInput" placeholder="Enter spectator's name, or leave it blank"
                         class="premium-input w-full px-4 py-3 rounded-lg text-white placeholder-gray-500 focus:ring-0">
@@ -144,43 +196,54 @@
             </div>
 
             <!-- Output Section - Initially hidden -->
-            <div id="outputSection" class="flex flex-col items-center gap-8 hidden">
-                <!-- QR Code Display -->
-                <div id="qrContainer"
-                    class="output-container rounded-xl p-6 flex flex-col items-center justify-center w-full max-w-sm">
-                    <h2 class="cinzel-font text-2xl font-bold text-white mb-4">Your QR Code</h2>
-                    <div id="qrcode" class="bg-white p-4 rounded-lg shadow-lg"></div>
-                    <p class="text-gray-400 mt-4 text-center text-sm">Click the QR code to make it fullscreen.</p>
+            <div id="outputSection" class="hidden flex flex-col flex-grow min-h-0">
+                <div id="scrollWrapper" class="scroll-wrapper flex-grow">
+                     <!-- QR Code Display -->
+                    <div class="scroll-item flex justify-center items-center">
+                        <div id="qrContainer"
+                            class="output-container rounded-xl p-6 flex flex-col items-center justify-center w-full max-w-sm">
+                            <h2 class="cinzel-font text-2xl font-bold text-white mb-4">Your QR Code</h2>
+                            <div id="qrcode" class="bg-white p-4 rounded-lg shadow-lg"></div>
+                            <p class="text-gray-400 mt-4 text-center text-sm">Click the QR code to make it fullscreen.</p>
 
-                    <!-- Share Buttons -->
-                    <div id="shareButtonsContainer" class="mt-4 flex gap-4 hidden">
-                        <button id="shareQrButton"
-                            class="premium-button text-sm flex-1 text-white font-semibold px-4 py-2 rounded-lg flex items-center justify-center gap-2">
-                            <img src="https://img.icons8.com/ios/50/ffffff/qr-code--v1.png" alt="Share QR Code"
-                                class="w-5 h-5">
-                            Share QR
-                        </button>
-                        <button id="shareLinkButton"
-                            class="premium-button text-sm flex-1 text-white font-semibold px-4 py-2 rounded-lg flex items-center justify-center gap-2">
-                            <img src="https://img.icons8.com/sf-regular/48/ffffff/link.png" alt="Share Link"
-                                class="w-5 h-5">
-                            Share Link
-                        </button>
+                            <!-- Share Buttons -->
+                            <div id="shareButtonsContainer" class="mt-4 flex gap-4 hidden">
+                                <button id="shareQrButton"
+                                    class="premium-button text-sm flex-1 text-white font-semibold px-4 py-2 rounded-lg flex items-center justify-center gap-2">
+                                    <img src="https://img.icons8.com/ios/50/ffffff/qr-code--v1.png" alt="Share QR Code"
+                                        class="w-5 h-5">
+                                    Share QR
+                                </button>
+                                <button id="shareLinkButton"
+                                    class="premium-button text-sm flex-1 text-white font-semibold px-4 py-2 rounded-lg flex items-center justify-center gap-2">
+                                    <img src="https://img.icons8.com/sf-regular/48/ffffff/link.png" alt="Share Link"
+                                        class="w-5 h-5">
+                                    Share Link
+                                </button>
+                            </div>
+                            <p id="copyMessage" class="text-green-400 text-center mt-2 h-4 text-sm"></p>
+                        </div>
                     </div>
-                    <p id="copyMessage" class="text-green-400 text-center mt-2 h-4 text-sm"></p>
+
+                    <!-- Webpage Preview -->
+                    <div class="scroll-item flex justify-center items-center">
+                        <div id="previewContainer" class="output-container rounded-xl p-6 flex flex-col w-full max-w-sm">
+                            <h2 class="cinzel-font text-2xl font-bold text-white mb-4 text-center">Page Preview</h2>
+                            <div class="w-full h-96 bg-black rounded-lg overflow-hidden border border-gray-700">
+                                <canvas id="previewCanvas" class="w-full h-full"></canvas>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
-                <!-- Webpage Preview -->
-                <div id="previewContainer" class="output-container rounded-xl p-6 flex flex-col w-full max-w-sm">
-                    <h2 class="cinzel-font text-2xl font-bold text-white mb-4 text-center">Page Preview</h2>
-                    <div class="w-full h-96 bg-black rounded-lg overflow-hidden border border-gray-700">
-                        <canvas id="previewCanvas" class="w-full h-full"></canvas>
-                    </div>
+                 <!-- Dot Indicators -->
+                <div id="dotsContainer" class="dots-container hidden">
+                    <span class="dot active" data-index="0"></span>
+                    <span class="dot" data-index="1"></span>
                 </div>
             </div>
 
             <!-- Disclaimer Text -->
-            <p class="text-center text-xs text-gray-500 mt-12">This page is only used to generate a QR code for your
+            <p class="text-center text-xs text-gray-500 mt-auto pb-4 flex-shrink-0">This page is only used to generate a QR code for your
                 spectator. The actual routine does not require this app in play.</p>
         </div>
     </div>
@@ -245,6 +308,9 @@
         const fullscreenModal = document.getElementById('fullscreenModal');
         const closeModalButton = document.getElementById('closeModalButton');
         const fullscreenQrContainer = document.getElementById('fullscreenQrContainer');
+        const scrollWrapper = document.getElementById('scrollWrapper');
+        const dotsContainer = document.getElementById('dotsContainer');
+        const dots = document.querySelectorAll('.dot');
 
         // --- Symbol Data for Preview ---
         const symbols = [
@@ -273,6 +339,7 @@
         function showApp() {
             licenseSection.classList.add('hidden');
             qrGeneratorSection.classList.remove('hidden');
+            qrGeneratorSection.classList.add('flex');
         }
 
         /**
@@ -280,6 +347,7 @@
          */
         function showLicenseForm() {
             qrGeneratorSection.classList.add('hidden');
+            qrGeneratorSection.classList.remove('flex');
             licenseSection.classList.remove('hidden');
         }
         
@@ -609,6 +677,9 @@
             mainBody.classList.remove('justify-center');
             mainBody.classList.add('justify-start', 'pt-8', 'md:pt-12');
             outputSection.classList.remove('hidden');
+            outputSection.classList.add('flex');
+            dotsContainer.classList.remove('hidden');
+
 
             requestAnimationFrame(() => {
                 drawPreview(formattedName);
@@ -619,6 +690,34 @@
                 }, 50);
             });
         }
+        
+        // --- Scroll and Dot Indicator Logic ---
+        function updateDots() {
+            const scrollLeft = scrollWrapper.scrollLeft;
+            const width = scrollWrapper.clientWidth;
+            const activeIndex = Math.round(scrollLeft / width);
+
+            dots.forEach((dot, index) => {
+                if (index === activeIndex) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+        }
+
+        scrollWrapper.addEventListener('scroll', updateDots);
+        
+        dots.forEach(dot => {
+            dot.addEventListener('click', () => {
+                const index = parseInt(dot.dataset.index);
+                const scrollLeft = index * scrollWrapper.clientWidth;
+                scrollWrapper.scrollTo({
+                    left: scrollLeft,
+                    behavior: 'smooth'
+                });
+            });
+        });
 
         // --- Share and Copy Logic ---
         shareLinkButton.addEventListener('click', async () => {
