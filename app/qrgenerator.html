@@ -20,7 +20,7 @@
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@400;500&display=swap"
         rel="stylesheet">
 
@@ -245,10 +245,13 @@
                 <!-- Input Form -->
                 <div class="mb-8 md:mb-12 max-w-lg mx-auto flex-shrink-0">
                     <form id="qrForm" class="flex flex-col sm:flex-row gap-4">
-                        <input type="text" id="nameInput" placeholder="Enter spectator's name"
-                            class="premium-input center-text-input w-full px-4 py-3 rounded-lg text-white placeholder-gray-500 focus:ring-0">
+                        <div class="w-full">
+                            <input type="text" id="nameInput" placeholder="Enter spectator's name"
+                                class="premium-input center-text-input w-full px-4 py-3 rounded-lg text-white placeholder-gray-500 focus:ring-0">
+                            <p class="text-xs text-gray-500 text-center mt-2">(optional)</p>
+                        </div>
                         <button type="submit" id="generateButton"
-                            class="premium-button text-white font-semibold px-6 py-3 rounded-lg whitespace-nowrap">Generate</button>
+                            class="premium-button text-white font-semibold px-6 py-3 rounded-lg whitespace-nowrap w-full sm:w-auto">Generate</button>
                     </form>
                     <p id="errorMessage" class="text-red-400 text-center mt-2 h-4"></p>
                 </div>
@@ -266,8 +269,8 @@
                         <div class="scroll-item">
                             <div id="qrContainer"
                                 class="output-container rounded-xl p-6 flex flex-col items-center justify-center w-full max-w-sm">
-                                <h2 class="cinzel-font text-2xl font-bold text-white mb-4">Your QR Code</h2>
-                                <div id="qrcode" class="bg-white p-4 rounded-lg shadow-lg"></div>
+                                <h2 class="cinzel-font text-2xl font-bold text-white mb-4 text-center">Your QR Code</h2>
+                                <div id="qrcode" class="bg-white p-4 rounded-lg shadow-lg w-64 h-64 flex items-center justify-center"></div>
                                 <p class="text-gray-400 mt-4 text-center text-sm">Click the QR code to make it fullscreen.</p>
                                 <p id="copyMessage" class="text-green-400 text-center mt-2 h-4 text-sm"></p>
                             </div>
@@ -276,7 +279,7 @@
                         <div class="scroll-item">
                             <div id="previewContainer" class="output-container rounded-xl p-6 flex flex-col items-center justify-center w-full max-w-sm">
                                 <h2 class="cinzel-font text-2xl font-bold text-white mb-4 text-center">Page Preview</h2>
-                                <div class="w-full h-full max-h-72 bg-black rounded-lg overflow-hidden border border-gray-700">
+                                <div class="w-64 h-64 bg-black rounded-lg overflow-hidden border border-gray-700">
                                     <canvas id="previewCanvas" class="w-full h-full"></canvas>
                                 </div>
                             </div>
@@ -493,7 +496,8 @@
             generatedUrl = `${currentURL}?id=${encodeURIComponent(customEncode(formattedName))}`;
 
             qrcodeContainer.innerHTML = '';
-            QRCode.toCanvas(generatedUrl, { errorCorrectionLevel: 'H', width: 220 }, (error, canvas) => {
+            // New QR code width to fit the container (256px container - 32px padding)
+            QRCode.toCanvas(generatedUrl, { errorCorrectionLevel: 'H', width: 224 }, (error, canvas) => {
                 if (error) {
                     errorMessage.textContent = 'Failed to generate QR code.';
                     return;
