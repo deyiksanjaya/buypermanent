@@ -218,7 +218,7 @@
                 <h2 class="cinzel-font text-2xl font-bold text-white mb-4 text-center">Activate Your Product</h2>
                 <form id="licenseForm" class="flex flex-col gap-4">
                     <input type="email" id="emailInput" placeholder="Enter your email..."
-                        class="premium-input w-full px-4 py-3 rounded-lg text-white placeholder-gray-500 focus:ring-0" required>
+                        class="premium-input center-text-input w-full px-4 py-3 rounded-lg text-white placeholder-gray-500 focus:ring-0" required>
                     <input type="text" id="licenseInput" placeholder="Enter your license code..."
                         class="premium-input center-text-input w-full px-4 py-3 rounded-lg text-white placeholder-gray-500 focus:ring-0" required>
                     <button type="submit" id="submitLicenseButton"
@@ -256,14 +256,6 @@
                                 <h2 class="cinzel-font text-2xl font-bold text-white mb-4">Your QR Code</h2>
                                 <div id="qrcode" class="bg-white p-4 rounded-lg shadow-lg"></div>
                                 <p class="text-gray-400 mt-4 text-center text-sm">Click the QR code to make it fullscreen.</p>
-                                <div id="shareButtonsContainer" class="mt-4 flex gap-4">
-                                    <button id="shareQrButton" class="premium-button text-sm flex-1 text-white font-semibold px-4 py-2 rounded-lg flex items-center justify-center gap-2">
-                                        <img src="https://img.icons8.com/ios/50/ffffff/qr-code--v1.png" alt="Share QR Code" class="w-5 h-5"> Share QR
-                                    </button>
-                                    <button id="shareLinkButton" class="premium-button text-sm flex-1 text-white font-semibold px-4 py-2 rounded-lg flex items-center justify-center gap-2">
-                                        <img src="https://img.icons8.com/sf-regular/48/ffffff/link.png" alt="Share Link" class="w-5 h-5"> Share Link
-                                    </button>
-                                </div>
                                 <p id="copyMessage" class="text-green-400 text-center mt-2 h-4 text-sm"></p>
                             </div>
                         </div>
@@ -331,7 +323,6 @@
         const previewContainer = document.getElementById('previewContainer');
         const errorMessage = document.getElementById('errorMessage');
         const outputSection = document.getElementById('outputSection');
-        const shareButtonsContainer = document.getElementById('shareButtonsContainer');
         const copyMessage = document.getElementById('copyMessage');
         const fullscreenModal = document.getElementById('fullscreenModal');
         const closeModalButton = document.getElementById('closeModalButton');
@@ -607,44 +598,6 @@
                     behavior: 'smooth'
                 });
             });
-        });
-
-        document.getElementById('shareLinkButton').addEventListener('click', async () => {
-            if (!generatedUrl) return;
-            copyMessage.textContent = '';
-            if (navigator.share) {
-                await navigator.share({ title: 'Invitation', text: `An invitation for ${nameInput.value}`, url: generatedUrl }).catch(err => console.error('Share failed:', err.message));
-            } else {
-                const textArea = document.createElement('textarea');
-                textArea.value = generatedUrl;
-                document.body.appendChild(textArea);
-                textArea.select();
-                try {
-                    document.execCommand('copy');
-                    copyMessage.textContent = 'Link copied to clipboard!';
-                } catch (err) {
-                    copyMessage.textContent = 'Failed to copy link.';
-                }
-                document.body.removeChild(textArea);
-                setTimeout(() => { copyMessage.textContent = ''; }, 3000);
-            }
-        });
-
-        document.getElementById('shareQrButton').addEventListener('click', () => {
-            if (!qrCanvasElement) return;
-            copyMessage.textContent = '';
-            qrCanvasElement.toBlob(async (blob) => {
-                const file = new File([blob], 'qrcode.png', { type: 'image/png' });
-                if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                    await navigator.share({ files: [file], title: 'Invitation QR Code', text: `QR Code for ${nameInput.value}` }).catch(err => console.error('Share failed:', err.message));
-                } else {
-                    const link = document.createElement('a');
-                    link.href = URL.createObjectURL(blob);
-                    link.download = 'qrcode.png';
-                    link.click();
-                    URL.revokeObjectURL(link.href);
-                }
-            }, 'image/png');
         });
 
         qrcodeContainer.addEventListener('click', () => { if (generatedUrl) showFullscreenQR(generatedUrl); });
