@@ -4,7 +4,7 @@
   "start_url": "qrgenerator.html",
   "display": "fullscreen",
   "background_color": "#000000",
-  "theme_color": "#1a1a1a",
+  "theme_color": "#000000",
   "description": "QR code generator for PERMANENT by Heri Sanjaya",
   "icons": [
     {
