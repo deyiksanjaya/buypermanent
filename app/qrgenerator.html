@@ -20,7 +20,7 @@
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@400;500&display=swap"
         rel="stylesheet">
 
@@ -305,8 +305,8 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getDatabase, ref, get, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-        import { getFirestore, doc, setDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getFirestore, doc, setDoc, getDoc, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAjs_-oH_kma3lHU4BCyStN8W0606MYLus",
@@ -456,23 +456,25 @@
             licenseErrorMessage.textContent = "";
 
             try {
-                // === OPTIMIZED CODE START ===
-                // Create a direct reference to the license code the user entered.
-                const licenseRef = ref(db, `/licenseCodes/${userLicense}`);
-                const snapshot = await get(licenseRef);
+                // === CORRECTED FIRESTORE LOGIC START ===
+                // 1. Create a direct reference to the document whose ID is the license code.
+                const availableLicenseRef = doc(firestore, "availableLicenses", userLicense);
+                const licenseSnap = await getDoc(availableLicenseRef);
 
-                // Check if the snapshot exists. If it does, the license is valid.
-                if (snapshot.exists()) {
-                    // License is valid, proceed with activation.
-                    await setDoc(doc(firestore, "activatedLicenses", userEmail), {
+                // 2. Check if the document exists. If it does, the license is valid and available.
+                if (licenseSnap.exists()) {
+                    // 3. License is valid. Create a new document in 'activatedLicenses'.
+                    const activatedLicenseRef = doc(firestore, "activatedLicenses", userEmail);
+                    await setDoc(activatedLicenseRef, {
                         email: userEmail,
                         licenseCode: userLicense,
                         activatedAt: serverTimestamp()
                     });
                     
-                    // Remove the used license code from the database.
-                    await remove(licenseRef); 
+                    // 4. Delete the license from 'availableLicenses' to mark it as used.
+                    await deleteDoc(availableLicenseRef); 
                     
+                    // 5. Save credentials and start the app.
                     localStorage.setItem('permanentMagicEmail', userEmail);
                     localStorage.setItem('permanentMagicLicenseCode', userLicense);
                     
@@ -484,10 +486,10 @@
                     await startApp();
 
                 } else {
-                    // If snapshot doesn't exist, the license code is invalid.
+                    // If the document doesn't exist, the license code is invalid.
                     licenseErrorMessage.textContent = "Invalid license code.";
                 }
-                // === OPTIMIZED CODE END ===
+                // === CORRECTED FIRESTORE LOGIC END ===
 
             } catch (error) {
                 console.error("License validation failed:", error);
@@ -517,7 +519,6 @@
             
             outputSection.classList.remove('hidden');
             dotsContainer.classList.remove('hidden');
-            // disclaimerText remains hidden as it's hidden by default in this flow
 
             requestAnimationFrame(() => {
                 drawPreview(formattedName);
