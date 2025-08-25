@@ -20,7 +20,7 @@
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@400;500&display=swap"
         rel="stylesheet">
 
@@ -305,7 +305,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        // REMOVED: getDatabase, ref, get from Realtime Database
         import { getFirestore, doc, setDoc, getDoc, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -318,7 +318,8 @@
             databaseURL: "https://permanentmagicapp-default-rtdb.firebaseio.com"
         };
 
-        let db, auth, firestore;
+        // REMOVED: db variable for Realtime Database
+        let auth, firestore;
         let currentURL = '';
         let generatedUrl = null;
         let qrCanvasElement = null;
@@ -395,8 +396,8 @@
             try {
                 const app = initializeApp(firebaseConfig);
                 auth = getAuth(app);
-                db = getDatabase(app);
-                firestore = getFirestore(app);
+                // REMOVED: db = getDatabase(app);
+                firestore = getFirestore(app); // Initialize Firestore
                 await signInAnonymously(auth);
 
                 const localEmail = localStorage.getItem('permanentMagicEmail');
@@ -425,23 +426,33 @@
             }
         }
 
+        // === MODIFIED FUNCTION TO USE FIRESTORE ===
         async function startApp() {
             try {
-                const configRef = ref(db, '/config');
-                const snapshot = await get(configRef);
-                if (snapshot.exists()) {
-                    currentURL = snapshot.val().currentURL;
-                    if (!currentURL) throw new Error("currentURL not found in database.");
+                // 1. Create a reference to the 'settings' document in the 'config' collection
+                const configDocRef = doc(firestore, "config", "settings");
+                
+                // 2. Get the document snapshot
+                const docSnap = await getDoc(configDocRef);
+
+                // 3. Check if the document exists and get the URL
+                if (docSnap.exists()) {
+                    currentURL = docSnap.data().currentURL;
+                    if (!currentURL) throw new Error("currentURL field not found in the document.");
+                    
+                    // If successful, show the app
                     showApp();
                     await generateAndDisplay("Guest"); // Generate initial content
                 } else {
-                    throw new Error("Configuration not found in database.");
+                    throw new Error("Config document ('config/settings') not found in Firestore.");
                 }
             } catch (error) {
                 console.error("App startup failed:", error);
+                // Fallback to license form if fetching the URL fails
                 showLicenseForm();
             }
         }
+        // === END OF MODIFICATION ===
 
         async function handleLicenseSubmit(e) {
             e.preventDefault();
@@ -456,14 +467,10 @@
             licenseErrorMessage.textContent = "";
 
             try {
-                // === CORRECTED FIRESTORE LOGIC START ===
-                // 1. Create a direct reference to the document whose ID is the license code.
                 const availableLicenseRef = doc(firestore, "availableLicenses", userLicense);
                 const licenseSnap = await getDoc(availableLicenseRef);
 
-                // 2. Check if the document exists. If it does, the license is valid and available.
                 if (licenseSnap.exists()) {
-                    // 3. License is valid. Create a new document in 'activatedLicenses'.
                     const activatedLicenseRef = doc(firestore, "activatedLicenses", userEmail);
                     await setDoc(activatedLicenseRef, {
                         email: userEmail,
@@ -471,10 +478,8 @@
                         activatedAt: serverTimestamp()
                     });
                     
-                    // 4. Delete the license from 'availableLicenses' to mark it as used.
                     await deleteDoc(availableLicenseRef); 
                     
-                    // 5. Save credentials and start the app.
                     localStorage.setItem('permanentMagicEmail', userEmail);
                     localStorage.setItem('permanentMagicLicenseCode', userLicense);
                     
@@ -486,10 +491,8 @@
                     await startApp();
 
                 } else {
-                    // If the document doesn't exist, the license code is invalid.
                     licenseErrorMessage.textContent = "Invalid license code.";
                 }
-                // === CORRECTED FIRESTORE LOGIC END ===
 
             } catch (error) {
                 console.error("License validation failed:", error);
@@ -507,7 +510,6 @@
             generatedUrl = `${currentURL}?id=${encodeURIComponent(customEncode(formattedName))}`;
 
             qrcodeContainer.innerHTML = '';
-            // New QR code width to fit the container (256px container - 32px padding)
             QRCode.toCanvas(generatedUrl, { errorCorrectionLevel: 'H', width: 224 }, (error, canvas) => {
                 if (error) {
                     errorMessage.textContent = 'Failed to generate QR code.';
