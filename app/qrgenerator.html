@@ -454,35 +454,41 @@
             submitLicenseButton.disabled = true;
             submitLicenseButton.textContent = "Verifying...";
             licenseErrorMessage.textContent = "";
-            try {
-                const licensesRef = ref(db, '/licenseCodes');
-                const snapshot = await get(licensesRef);
-                if (snapshot.exists()) {
-                    const allLicenses = snapshot.val();
-                    const matchedKey = Object.keys(allLicenses).find(key => allLicenses[key] === userLicense);
-                    if (matchedKey) {
-                        await setDoc(doc(firestore, "activatedLicenses", userEmail), {
-                            email: userEmail,
-                            licenseCode: userLicense,
-                            activatedAt: serverTimestamp()
-                        });
-                        await remove(ref(db, `/licenseCodes/${matchedKey}`));
-                        localStorage.setItem('permanentMagicEmail', userEmail);
-                        localStorage.setItem('permanentMagicLicenseCode', userLicense);
-                        
-                        licenseSection.classList.add('hidden');
-                        initializingModal.classList.remove('hidden');
-                        updateChecklist(1, true);
-                        updateChecklist(2, true);
-                        
-                        await startApp();
 
-                    } else {
-                        licenseErrorMessage.textContent = "Invalid license code.";
-                    }
+            try {
+                // === OPTIMIZED CODE START ===
+                // Create a direct reference to the license code the user entered.
+                const licenseRef = ref(db, `/licenseCodes/${userLicense}`);
+                const snapshot = await get(licenseRef);
+
+                // Check if the snapshot exists. If it does, the license is valid.
+                if (snapshot.exists()) {
+                    // License is valid, proceed with activation.
+                    await setDoc(doc(firestore, "activatedLicenses", userEmail), {
+                        email: userEmail,
+                        licenseCode: userLicense,
+                        activatedAt: serverTimestamp()
+                    });
+                    
+                    // Remove the used license code from the database.
+                    await remove(licenseRef); 
+                    
+                    localStorage.setItem('permanentMagicEmail', userEmail);
+                    localStorage.setItem('permanentMagicLicenseCode', userLicense);
+                    
+                    licenseSection.classList.add('hidden');
+                    initializingModal.classList.remove('hidden');
+                    updateChecklist(1, true);
+                    updateChecklist(2, true);
+                    
+                    await startApp();
+
                 } else {
-                    licenseErrorMessage.textContent = "No licenses available. Please contact support.";
+                    // If snapshot doesn't exist, the license code is invalid.
+                    licenseErrorMessage.textContent = "Invalid license code.";
                 }
+                // === OPTIMIZED CODE END ===
+
             } catch (error) {
                 console.error("License validation failed:", error);
                 licenseErrorMessage.textContent = "Error checking license. Please try again.";
