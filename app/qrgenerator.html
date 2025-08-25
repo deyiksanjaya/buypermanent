@@ -35,15 +35,14 @@
             overscroll-behavior: none;
             height: 100%;
             width: 100%;
-            background-color: #000; /* FIX: Ensure root background is black */
-            -webkit-user-select: none; /* Safari */
-            -ms-user-select: none; /* IE 10+ */
-            user-select: none; /* Standard syntax */
+            background-color: #000;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
 
         body {
             font-family: 'Inter', sans-serif;
-            /* background-color is inherited from the rule above */
             color: #e0e0e0;
         }
         
@@ -57,7 +56,7 @@
         }
 
         .main-bg {
-            background-color: #000; /* Solid black background */
+            background-color: #000;
         }
 
         /* === INPUT & BUTTON STYLES === */
@@ -110,7 +109,7 @@
             transform: translateY(20px);
             transition: opacity 0.5s ease, transform 0.5s ease;
             visibility: hidden;
-            height: 440px; /* Fixed height for both slider cards */
+            height: 440px;
         }
 
         .output-container.visible {
@@ -130,11 +129,11 @@
             overflow-x: auto;
             scroll-snap-type: x mandatory;
             -webkit-overflow-scrolling: touch;
-            scrollbar-width: none; /* Firefox */
+            scrollbar-width: none;
         }
 
         .scroll-wrapper::-webkit-scrollbar {
-            display: none; /* Safari and Chrome */
+            display: none;
         }
 
         .scroll-item {
@@ -148,7 +147,7 @@
         /* === DOT INDICATOR STYLES === */
         .dots-container {
             text-align: center;
-            padding-bottom: 10px; /* Space between dots and slider */
+            padding-bottom: 10px;
         }
 
         .dot {
@@ -171,11 +170,11 @@
             display: flex;
             align-items: center;
             margin-bottom: 8px;
-            color: #9ca3af; /* gray-400 */
+            color: #9ca3af;
             transition: color 0.3s ease;
         }
         .checklist-item.completed {
-            color: #e5e7eb; /* gray-200 */
+            color: #e5e7eb;
         }
         .checklist-item .icon {
             width: 20px;
@@ -185,10 +184,10 @@
             transition: all 0.3s ease;
         }
         .checklist-item .pending-icon {
-            stroke: #6b7280; /* gray-500 */
+            stroke: #6b7280;
         }
         .checklist-item .completed-icon {
-            stroke: #34d399; /* green-400 */
+            stroke: #34d399;
             transform: scale(1);
         }
     </style>
@@ -220,6 +219,12 @@
                             <!-- Icon will be injected by JS -->
                         </svg>
                         <span>Verifying</span>
+                    </div>
+                    <div id="check-step-3" class="checklist-item">
+                        <svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <!-- Icon will be injected by JS -->
+                        </svg>
+                        <span>Synchronizing Data</span>
                     </div>
                 </div>
             </div>
@@ -283,7 +288,6 @@
                                     <canvas id="previewCanvas" class="w-full h-full"></canvas>
                                 </div>
                                 <p class="text-gray-400 mt-4 text-center text-sm">A preview of what the spectator will see.</p>
-                                <!-- FIX: Add a placeholder paragraph to balance the layout -->
                                 <div class="h-4 mt-2"></div>
                             </div>
                         </div>
@@ -305,7 +309,6 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        // REMOVED: getDatabase, ref, get from Realtime Database
         import { getFirestore, doc, setDoc, getDoc, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -314,13 +317,10 @@
             projectId: "permanentmagicapp",
             storageBucket: "permanentmagicapp.firebasestorage.app",
             messagingSenderId: "695981452362",
-            appId: "1:695981452362:web:a0155863e767fa63424ab3",
-            databaseURL: "https://permanentmagicapp-default-rtdb.firebaseio.com"
+            appId: "1:695981452362:web:a0155863e767fa63424263"
         };
 
-        // REMOVED: db variable for Realtime Database
         let auth, firestore;
-        let currentURL = '';
         let generatedUrl = null;
         let qrCanvasElement = null;
 
@@ -392,16 +392,17 @@
         async function initialize() {
             updateChecklist(1, false);
             updateChecklist(2, false);
+            updateChecklist(3, false);
 
             try {
                 const app = initializeApp(firebaseConfig);
                 auth = getAuth(app);
-                // REMOVED: db = getDatabase(app);
-                firestore = getFirestore(app); // Initialize Firestore
+                firestore = getFirestore(app);
                 await signInAnonymously(auth);
 
                 const localEmail = localStorage.getItem('permanentMagicEmail');
                 const localLicense = localStorage.getItem('permanentMagicLicenseCode');
+
                 updateChecklist(1, true);
 
                 if (localEmail && localLicense) {
@@ -410,49 +411,47 @@
                     updateChecklist(2, true);
 
                     if (docSnap.exists() && docSnap.data().licenseCode === localLicense) {
-                        await startApp();
+                        await syncUrlAndStartApp();
                     } else {
                         localStorage.removeItem('permanentMagicEmail');
                         localStorage.removeItem('permanentMagicLicenseCode');
                         showLicenseForm();
                     }
                 } else {
-                    updateChecklist(2, true); // Mark as complete even if skipped
+                    updateChecklist(2, true);
                     showLicenseForm();
                 }
             } catch (error) {
                 console.error("Initialization failed:", error);
-                showLicenseForm(); // Fallback to license form on major error
-            }
-        }
-
-        // === MODIFIED FUNCTION TO USE FIRESTORE ===
-        async function startApp() {
-            try {
-                // 1. Create a reference to the 'settings' document in the 'config' collection
-                const configDocRef = doc(firestore, "config", "settings");
-                
-                // 2. Get the document snapshot
-                const docSnap = await getDoc(configDocRef);
-
-                // 3. Check if the document exists and get the URL
-                if (docSnap.exists()) {
-                    currentURL = docSnap.data().currentURL;
-                    if (!currentURL) throw new Error("currentURL field not found in the document.");
-                    
-                    // If successful, show the app
-                    showApp();
-                    await generateAndDisplay("Guest"); // Generate initial content
-                } else {
-                    throw new Error("Config document ('config/settings') not found in Firestore.");
-                }
-            } catch (error) {
-                console.error("App startup failed:", error);
-                // Fallback to license form if fetching the URL fails
                 showLicenseForm();
             }
         }
-        // === END OF MODIFICATION ===
+
+        async function syncUrlAndStartApp() {
+            let localURL = localStorage.getItem('permanentMagicAppURL');
+            const configDocRef = doc(firestore, "config", "settings");
+            const docSnap = await getDoc(configDocRef);
+            updateChecklist(3, true);
+
+            if (docSnap.exists() && docSnap.data().currentURL) {
+                const firestoreURL = docSnap.data().currentURL;
+                if (localURL !== firestoreURL) {
+                    localStorage.setItem('permanentMagicAppURL', firestoreURL);
+                    localURL = firestoreURL;
+                }
+            } else if (!localURL) {
+                // Handle case where no URL is in Firestore or localStorage
+                alert("App configuration is missing. Please contact the administrator.");
+                return;
+            }
+
+            if (localURL) {
+                showApp();
+                await generateAndDisplay("Guest", localURL);
+            } else {
+                showLicenseForm();
+            }
+        }
 
         async function handleLicenseSubmit(e) {
             e.preventDefault();
@@ -488,7 +487,7 @@
                     updateChecklist(1, true);
                     updateChecklist(2, true);
                     
-                    await startApp();
+                    await syncUrlAndStartApp();
 
                 } else {
                     licenseErrorMessage.textContent = "Invalid license code.";
@@ -503,11 +502,11 @@
             }
         }
         
-        async function generateAndDisplay(spectatorName) {
+        async function generateAndDisplay(spectatorName, appUrl) {
             const formattedName = spectatorName.charAt(0).toUpperCase() + spectatorName.slice(1);
             errorMessage.textContent = '';
             copyMessage.textContent = '';
-            generatedUrl = `${currentURL}?id=${encodeURIComponent(customEncode(formattedName))}`;
+            generatedUrl = `${appUrl}?id=${encodeURIComponent(customEncode(formattedName))}`;
 
             qrcodeContainer.innerHTML = '';
             QRCode.toCanvas(generatedUrl, { errorCorrectionLevel: 'H', width: 224 }, (error, canvas) => {
@@ -608,7 +607,12 @@
         async function handleGenerate(e) {
             e.preventDefault();
             const spectatorName = nameInput.value.trim() || "Guest";
-            await generateAndDisplay(spectatorName);
+            const appUrl = localStorage.getItem('permanentMagicAppURL');
+            if (appUrl) {
+                await generateAndDisplay(spectatorName, appUrl);
+            } else {
+                errorMessage.textContent = "App URL not found. Please refresh the page.";
+            }
         }
         
         function updateDots() {
