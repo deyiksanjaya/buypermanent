@@ -317,7 +317,7 @@
             projectId: "permanentmagicapp",
             storageBucket: "permanentmagicapp.firebasestorage.app",
             messagingSenderId: "695981452362",
-            appId: "1:695981452362:web:a0155863e767fa63424263"
+            appId: "1:695981452362:web:a0155863e767fa63424ab3"
         };
 
         let auth, firestore;
@@ -406,19 +406,37 @@
                 updateChecklist(1, true);
 
                 if (localEmail && localLicense) {
-                    const licenseDocRef = doc(firestore, "activatedLicenses", localEmail);
-                    const docSnap = await getDoc(licenseDocRef);
-                    updateChecklist(2, true);
+                    const lastVerification = localStorage.getItem('lastVerificationDate');
+                    const today = new Date().toLocaleDateString();
 
-                    if (docSnap.exists() && docSnap.data().licenseCode === localLicense) {
-                        await syncUrlAndStartApp();
+                    if (lastVerification === today) {
+                        updateChecklist(2, true);
+                        updateChecklist(3, true);
+                        showApp();
+                        const appUrl = localStorage.getItem('permanentMagicAppURL');
+                        if (appUrl) {
+                             await generateAndDisplay("Guest", appUrl);
+                        } else {
+                            // If URL isn't in local storage, sync it from Firestore once
+                            await syncUrlAndStartApp();
+                        }
                     } else {
-                        localStorage.removeItem('permanentMagicEmail');
-                        localStorage.removeItem('permanentMagicLicenseCode');
-                        showLicenseForm();
+                        const licenseDocRef = doc(firestore, "activatedLicenses", localEmail);
+                        const docSnap = await getDoc(licenseDocRef);
+                        updateChecklist(2, true);
+
+                        if (docSnap.exists() && docSnap.data().licenseCode === localLicense) {
+                            localStorage.setItem('lastVerificationDate', today);
+                            await syncUrlAndStartApp();
+                        } else {
+                            localStorage.removeItem('permanentMagicEmail');
+                            localStorage.removeItem('permanentMagicLicenseCode');
+                            showLicenseForm();
+                        }
                     }
                 } else {
                     updateChecklist(2, true);
+                    updateChecklist(3, true);
                     showLicenseForm();
                 }
             } catch (error) {
@@ -440,7 +458,6 @@
                     localURL = firestoreURL;
                 }
             } else if (!localURL) {
-                // Handle case where no URL is in Firestore or localStorage
                 alert("App configuration is missing. Please contact the administrator.");
                 return;
             }
@@ -481,6 +498,7 @@
                     
                     localStorage.setItem('permanentMagicEmail', userEmail);
                     localStorage.setItem('permanentMagicLicenseCode', userLicense);
+                    localStorage.setItem('lastVerificationDate', new Date().toLocaleDateString());
                     
                     licenseSection.classList.add('hidden');
                     initializingModal.classList.remove('hidden');
