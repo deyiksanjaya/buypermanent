@@ -20,7 +20,7 @@
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@400;500&display=swap"
         rel="stylesheet">
 
@@ -30,8 +30,12 @@
     <style>
         /* === CORE LAYOUT FIXES === */
         html, body {
+            position: fixed;
+            overflow: hidden;
+            overscroll-behavior: none;
             height: 100%;
-            overflow: hidden; /* Disable scrolling completely */
+            width: 100%;
+            background-color: #000; /* FIX: Ensure root background is black */
             -webkit-user-select: none; /* Safari */
             -ms-user-select: none; /* IE 10+ */
             user-select: none; /* Standard syntax */
@@ -39,8 +43,13 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #000; /* Solid black background */
+            /* background-color is inherited from the rule above */
             color: #e0e0e0;
+        }
+        
+        #mainContent {
+            overflow: hidden;
+            min-height: 0;
         }
 
         .cinzel-font {
@@ -91,6 +100,8 @@
 
         /* === OUTPUT CONTAINER STYLES === */
         .output-container {
+            max-height: 100%;
+            overflow: hidden;
             background-color: rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(5px);
