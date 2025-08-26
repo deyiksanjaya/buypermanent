@@ -220,12 +220,6 @@
                         </svg>
                         <span>Verifying</span>
                     </div>
-                    <div id="check-step-3" class="checklist-item">
-                        <svg class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <!-- Icon will be injected by JS -->
-                        </svg>
-                        <span>Synchronizing Data</span>
-                    </div>
                 </div>
             </div>
 
@@ -320,6 +314,9 @@
             appId: "1:695981452362:web:a0155863e767fa63424ab3"
         };
 
+        const HARDCODED_URL = "https://esper.my.id/";
+        const VERIFICATION_INTERVAL_DAYS = 7;
+
         let auth, firestore;
         let generatedUrl = null;
         let qrCanvasElement = null;
@@ -392,7 +389,6 @@
         async function initialize() {
             updateChecklist(1, false);
             updateChecklist(2, false);
-            updateChecklist(3, false);
 
             try {
                 const app = initializeApp(firebaseConfig);
@@ -406,66 +402,35 @@
                 updateChecklist(1, true);
 
                 if (localEmail && localLicense) {
-                    const lastVerification = localStorage.getItem('lastVerificationDate');
-                    const today = new Date().toLocaleDateString();
-
-                    if (lastVerification === today) {
+                    const lastVerificationTime = localStorage.getItem('lastVerificationTime');
+                    const now = new Date().getTime();
+                    
+                    if (lastVerificationTime && (now - lastVerificationTime) < VERIFICATION_INTERVAL_DAYS * 24 * 60 * 60 * 1000) {
                         updateChecklist(2, true);
-                        updateChecklist(3, true);
                         showApp();
-                        const appUrl = localStorage.getItem('permanentMagicAppURL');
-                        if (appUrl) {
-                             await generateAndDisplay("Guest", appUrl);
-                        } else {
-                            // If URL isn't in local storage, sync it from Firestore once
-                            await syncUrlAndStartApp();
-                        }
+                        await generateAndDisplay("Guest");
                     } else {
                         const licenseDocRef = doc(firestore, "activatedLicenses", localEmail);
                         const docSnap = await getDoc(licenseDocRef);
                         updateChecklist(2, true);
 
                         if (docSnap.exists() && docSnap.data().licenseCode === localLicense) {
-                            localStorage.setItem('lastVerificationDate', today);
-                            await syncUrlAndStartApp();
+                            localStorage.setItem('lastVerificationTime', now);
+                            showApp();
+                            await generateAndDisplay("Guest");
                         } else {
                             localStorage.removeItem('permanentMagicEmail');
                             localStorage.removeItem('permanentMagicLicenseCode');
+                            localStorage.removeItem('lastVerificationTime');
                             showLicenseForm();
                         }
                     }
                 } else {
                     updateChecklist(2, true);
-                    updateChecklist(3, true);
                     showLicenseForm();
                 }
             } catch (error) {
                 console.error("Initialization failed:", error);
-                showLicenseForm();
-            }
-        }
-
-        async function syncUrlAndStartApp() {
-            let localURL = localStorage.getItem('permanentMagicAppURL');
-            const configDocRef = doc(firestore, "config", "settings");
-            const docSnap = await getDoc(configDocRef);
-            updateChecklist(3, true);
-
-            if (docSnap.exists() && docSnap.data().currentURL) {
-                const firestoreURL = docSnap.data().currentURL;
-                if (localURL !== firestoreURL) {
-                    localStorage.setItem('permanentMagicAppURL', firestoreURL);
-                    localURL = firestoreURL;
-                }
-            } else if (!localURL) {
-                alert("App configuration is missing. Please contact the administrator.");
-                return;
-            }
-
-            if (localURL) {
-                showApp();
-                await generateAndDisplay("Guest", localURL);
-            } else {
                 showLicenseForm();
             }
         }
@@ -498,14 +463,15 @@
                     
                     localStorage.setItem('permanentMagicEmail', userEmail);
                     localStorage.setItem('permanentMagicLicenseCode', userLicense);
-                    localStorage.setItem('lastVerificationDate', new Date().toLocaleDateString());
+                    localStorage.setItem('lastVerificationTime', new Date().getTime());
                     
                     licenseSection.classList.add('hidden');
                     initializingModal.classList.remove('hidden');
                     updateChecklist(1, true);
                     updateChecklist(2, true);
                     
-                    await syncUrlAndStartApp();
+                    showApp();
+                    await generateAndDisplay("Guest");
 
                 } else {
                     licenseErrorMessage.textContent = "Invalid license code.";
@@ -520,11 +486,11 @@
             }
         }
         
-        async function generateAndDisplay(spectatorName, appUrl) {
+        async function generateAndDisplay(spectatorName) {
             const formattedName = spectatorName.charAt(0).toUpperCase() + spectatorName.slice(1);
             errorMessage.textContent = '';
             copyMessage.textContent = '';
-            generatedUrl = `${appUrl}?id=${encodeURIComponent(customEncode(formattedName))}`;
+            generatedUrl = `${HARDCODED_URL}?id=${encodeURIComponent(customEncode(formattedName))}`;
 
             qrcodeContainer.innerHTML = '';
             QRCode.toCanvas(generatedUrl, { errorCorrectionLevel: 'H', width: 224 }, (error, canvas) => {
@@ -625,12 +591,7 @@
         async function handleGenerate(e) {
             e.preventDefault();
             const spectatorName = nameInput.value.trim() || "Guest";
-            const appUrl = localStorage.getItem('permanentMagicAppURL');
-            if (appUrl) {
-                await generateAndDisplay(spectatorName, appUrl);
-            } else {
-                errorMessage.textContent = "App URL not found. Please refresh the page.";
-            }
+            await generateAndDisplay(spectatorName);
         }
         
         function updateDots() {
