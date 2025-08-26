@@ -490,7 +490,8 @@
             const formattedName = spectatorName.charAt(0).toUpperCase() + spectatorName.slice(1);
             errorMessage.textContent = '';
             copyMessage.textContent = '';
-            generatedUrl = `${HARDCODED_URL}?id=${encodeURIComponent(customEncode(formattedName))}`;
+            // UPDATED: Use '#' instead of '?id=' for better history privacy.
+            generatedUrl = `${HARDCODED_URL}#${encodeURIComponent(customEncode(formattedName))}`;
 
             qrcodeContainer.innerHTML = '';
             QRCode.toCanvas(generatedUrl, { errorCorrectionLevel: 'H', width: 224 }, (error, canvas) => {
@@ -573,14 +574,7 @@
             return currentY;
         }
 
-        /**
-         * Encodes a string using Base64.
-         * @param {string} text - The string to encode.
-         * @returns {string} The Base64 encoded string.
-         */
         function customEncode(text) {
-            // Use built-in Base64 encoding. This is a standard and reliable way to encode text
-            // into a string that only contains letters, numbers, '+', and '/'.
             return btoa(text);
         }
 
