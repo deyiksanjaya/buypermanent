@@ -573,9 +573,15 @@
             return currentY;
         }
 
+        /**
+         * Encodes a string using Base64.
+         * @param {string} text - The string to encode.
+         * @returns {string} The Base64 encoded string.
+         */
         function customEncode(text) {
-            const charMap={'a':'@','b':'8','c':'[','d':')','e':'3','f':'F','g':'6','h':'#','i':'!','j':'J','k':'K','l':'1','m':'M','n':'^','o':'0','p':'P','q':'9','r':'R','s':'$','t':'+','u':'U','v':'V','w':'W','x':'X','y':'Y','z':'2',' ':'_'};
-            return text.toLowerCase().split('').map(char => charMap[char] || char).join('');
+            // Use built-in Base64 encoding. This is a standard and reliable way to encode text
+            // into a string that only contains letters, numbers, '+', and '/'.
+            return btoa(text);
         }
 
         function showFullscreenQR(url) {
