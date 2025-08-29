@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Permanent - Instruction Manual</title>
+    
+    <!-- Meta Tags for Web App Look -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Permanent Help">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/95/95240.png">
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/95/95240.png">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Custom Styles to match the app's aesthetic */
+        html, body {
+            background-color: #000;
+            color: #e0e0e0;
+            height: 100%;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .cinzel-font {
+            font-family: 'Cinzel', serif;
+        }
+
+        .content-card {
+            background-color: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+
+        h1, h2, h3 {
+            font-family: 'Cinzel', serif;
+            letter-spacing: 0.05em;
+        }
+        
+        h2 {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding-bottom: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        p, li {
+            line-height: 1.75;
+            color: #b0b0b0;
+        }
+
+        strong, .highlight {
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        code {
+            background-color: rgba(220, 180, 100, 0.1);
+            color: #dcb464;
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.25rem;
+            font-family: monospace;
+        }
+        
+        .script-box {
+            border-left: 4px solid rgba(220, 180, 100, 0.5);
+            padding-left: 1rem;
+            margin: 1rem 0;
+            font-style: italic;
+            color: #d1d5db;
+        }
+
+        /* Styles for login and premium inputs/buttons */
+        .premium-input {
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        .premium-input:focus {
+            outline: none;
+            border-color: rgba(220, 180, 100, 0.7);
+            box-shadow: 0 0 15px rgba(220, 180, 100, 0.3);
+        }
+        .premium-button {
+            background: linear-gradient(45deg, #3a3a3a, #1a1a1a);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s ease;
+        }
+        .premium-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(220, 180, 100, 0.2);
+        }
+        .premium-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* --- FLOATING CONSOLE STYLES --- */
+        #floatingConsole {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            width: 90%;
+            max-width: 400px;
+            height: 200px;
+            background-color: rgba(0, 0, 0, 0.85);
+            border: 1px solid #444;
+            border-radius: 8px;
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            font-family: monospace;
+            font-size: 12px;
+        }
+        #consoleHeader {
+            background-color: #222;
+            padding: 4px 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #444;
+        }
+        #consoleHeader span {
+            font-weight: bold;
+            color: #eee;
+        }
+        #consoleHeader button {
+            background-color: #555;
+            color: white;
+            border: none;
+            padding: 2px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 5px;
+        }
+        #consoleContent {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 8px;
+        }
+        #consoleContent p {
+            margin: 0 0 4px;
+            line-height: 1.4;
+            color: #fff;
+            word-break: break-all;
+        }
+        .log-error { color: #ff8080 !important; }
+        .log-warn { color: #ffdd80 !important; }
+        .log-info { color: #80c0ff !important; }
+        .log-log { color: #ffffff !important; }
+        #showConsoleButton {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            z-index: 99998;
+        }
+
+    </style>
+</head>
+
+<body class="antialiased">
+
+    <!-- Password Prompt Section (Visible by default) -->
+    <div id="passwordPrompt" class="w-full h-full flex items-center justify-center p-4">
+        <!-- Content remains the same -->
+        <div class="w-full max-w-sm text-center">
+            <h1 class="cinzel-font text-3xl font-bold text-white mb-6">Access Instructions</h1>
+            <div class="flex flex-col gap-4">
+                <input type="password" id="passcodeInput" placeholder="Enter Passcode"
+                    class="premium-input text-center w-full px-4 py-3 rounded-lg text-white placeholder-gray-500 focus:ring-0">
+                <button id="accessButton" class="premium-button text-white font-semibold px-6 py-3 rounded-lg">Read Instructions</button>
+            </div>
+            <p id="errorMessage" class="text-red-400 mt-4 h-5"></p>
+        </div>
+    </div>
+
+    <!-- Main Instruction Content (Hidden by default) -->
+    <div id="instructionContent" class="hidden">
+        <!-- All instruction content remains the same -->
+        <div class="container mx-auto max-w-3xl p-4 md:p-8">
+            <header class="text-center my-8 md:my-12">
+                <h1 class="text-4xl md:text-5xl font-bold text-white tracking-wider">Permanent</h1>
+                <p class="cinzel-font text-xl text-gray-400 mt-2">Instruction Manual</p>
+            </header>
+            <section class="content-card">
+                <h2 class="text-2xl font-bold text-white">The Effect</h2>
+                <p>
+                    You ask your spectator to choose one of the five symbols. You stress that this is a completely free choice—they can change their mind over and over again before settling on a final symbol. 
+                </p>
+                <p class="mt-4">
+                    Once they are sure of their choice, you explain that they could have been thinking of any symbol, but this one is now special. You ask them to focus their energy on that thought and make it permanent. When they try to erase their chosen symbol, they can't. Every other symbol is erasable, but not the one they were merely thinking of.
+                </p>
+            </section>
+             <section class="content-card">
+                <h2 class="text-2xl font-bold text-white">The Complete Performance Guide</h2>
+                <h3 class="text-xl font-semibold text-white mt-6 mb-4">Part 1: The Setup (Using the QR Generator App)</h3>
+                <p class="mb-6">This is your private preparation, done in seconds before the trick begins. The goal is to create a unique link for your spectator.</p>
+                <ol class="list-decimal list-inside space-y-6">
+                    <li>
+                        <strong class="highlight">Activate Your License:</strong> The first time you open the app, you will be prompted to enter your email and license code. This is a one-time activation per device.
+                    </li>
+                    <li>
+                        <strong class="highlight">Enter Spectator's Name (Optional but Recommended):</strong> In the input field, enter your spectator's name. 
+                        <ul class="list-disc list-inside ml-6 mt-2 space-y-2 text-sm">
+                            <li><strong class="highlight">Why?</strong> This personalizes the experience. The spectator's name will appear on the webpage, making the effect feel tailor-made for them and much stronger.</li>
+                            <li>If you're in a hurry, you can leave this blank for a general "Guest" link.</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong class="highlight">Generate the Link:</strong> Press the <code class="highlight">Generate</code> button. The output section will appear below.
+                    </li>
+                    <li>
+                        <strong class="highlight">Review the Output:</strong> The app will show two cards on a slider:
+                         <ul class="list-disc list-inside ml-6 mt-2 space-y-2 text-sm">
+                            <li><strong class="highlight">QR Code Card:</strong> This is the main card. It displays the unique QR code for your spectator to scan.</li>
+                            <li><strong class="highlight">Page Preview Card:</strong> Swipe left to see this. It shows a miniature preview of exactly what your spectator will see on their phone. Use this to confirm the name is correct.</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong class="highlight">Go Fullscreen:</strong> Tap the QR code image itself. This will open a <strong class="highlight">fullscreen view of the QR code</strong> with a pure black background.
+                        <ul class="list-disc list-inside ml-6 mt-2 space-y-2 text-sm">
+                            <li><strong class="highlight">Why?</strong> This is the best way to present the code. It looks clean, professional, and removes all other distractions from your phone screen, ensuring the spectator only scans what they need to.</li>
+                        </ul>
+                    </li>
+                </ol>
+                <h3 class="text-xl font-semibold text-white mt-10 mb-4">Part 2: The Performance & The Script</h3>
+                <p class="mb-6">Once the spectator scans the code and opens the page on their phone, the magic begins. Your role is now purely psychological.</p>
+                <ol class="list-decimal list-inside space-y-6">
+                    <li>
+                        Hand the phone to the spectator. Guide their attention to the five symbols.
+                        <div class="script-box">
+                            "Please take a look at these five symbols. In a moment, I want you to choose just one. This is a completely free choice, and you can change your mind as many times as you like. Just let me know when you have finally settled on one."
+                        </div>
+                    </li>
+                    <li>
+                        Wait for them to confirm they have one in mind. This is where you build the reality of the effect.
+                        <div class="script-box">
+                            "Perfect. You could have chosen any of the other four, but you settled on that specific one. Now, I want you to focus all your mental energy on that symbol. In your mind, I want you to imagine you are making that symbol permanent, unbreakable. Pour all your thought into it."
+                        </div>
+                    </li>
+                     <li>
+                        Now, you give them the challenge.
+                        <div class="script-box">
+                             "Now, try to erase your chosen symbol from the screen. Just smudge it away with your finger."
+                        </div>
+                        <p class="mt-2 text-sm">They will try, but they will find that it's impossible. It feels stuck.</p>
+                    </li>
+                    <li>
+                        After they fail, give the final instruction.
+                         <div class="script-box">
+                            "It seems your thought is truly permanent. Now try the others."
+                        </div>
+                        <p class="mt-2 text-sm">They will discover that every other symbol wipes away with ease, leaving only their freely thought-of-symbol as undeniable proof of their mental power.</p>
+                    </li>
+                </ol>
+            </section>
+            <section class="content-card">
+                <h2 class="text-2xl font-bold text-white">Advanced Handling & Features</h2>
+                <div class="mt-6">
+                    <h3 class="text-xl font-semibold text-white mb-2">The 'Refresh-Proof' Security</h3>
+                    <p>
+                        The most powerful feature of "Permanent" is that it is <strong class="highlight">refresh-proof</strong>. If a curious spectator tries to refresh the webpage to figure out the secret, the trick will not break. Instead, the locked symbol will <strong class="highlight">remain locked</strong>. This is a key security feature to prevent method discovery.
+                    </p>
+                    <p class="mt-2">This is also how a spectator can "see the revelation again." If they ask what would happen if they tried again, encourage them to refresh the page. The fact that the same symbol remains locked reinforces the effect.</p>
+                </div>
+                <div class="mt-8">
+                    <h3 class="text-xl font-semibold text-white mb-2">A Note on Repeating the Effect</h3>
+                    <p>
+                       While the trick is technically repeatable, it is <strong class="highlight">strongly not recommended</strong> to perform it for the same spectator twice in a row.
+                    </p>
+                    <p class="mt-4">
+                       The core theme of the effect is its name: <strong class="highlight">Permanent</strong>. The magic is most powerful when the spectator leaves with the undeniable proof that their thought has permanently altered the webpage. Encouraging them to refresh the page and see the <strong class="highlight">same symbol</strong> still locked creates a far more lasting and baffling memory than simply solving a puzzle twice with different outcomes.
+                    </p>
+                    <p class="mt-4">
+                       However, if a situation absolutely requires a reset for a new performance (e.g., performing for a different group of people), the <code class="highlight">Triple-Tap Reset</code> is the method to clear the previous result.
+                    </p>
+                </div>
+                <div class="mt-8">
+                    <h3 class="text-xl font-semibold text-white mb-2">The Secret Reset (Triple-Tap)</h3>
+                    <p>
+                        The primary purpose of the reset is to <strong class="highlight">clean up and end the trick safely</strong> after the performance is over. Think of it like putting a deck of cards back into its box.
+                    </p>
+                    <p class="mt-2">
+                        To perform the reset, <strong class="highlight">triple-tap anywhere</strong> on the spectator's screen. The page will flash white for a moment—this is your visual confirmation that the reset was successful. All secret data is now erased, and the page has returned to its normal, non-magical state.
+                    </p>
+                </div>
+                <div class="mt-8 border-t border-gray-700 pt-6">
+                    <h3 class="text-xl font-semibold text-white mb-2">Summary: Refresh vs. Reset</h3>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li><strong class="highlight">Refreshing the Page:</strong> <span class="text-red-400">DOES NOT</span> reset the trick. It <strong class="highlight">locks in the result</strong> and proves the magic is real.</li>
+                        <li><strong class="highlight">Triple-Tap:</strong> This is the only way to perform a <strong class="highlight">full reset</strong>, clearing the page for the next performance.</li>
+                    </ul>
+                </div>
+            </section>
+            <footer class="text-center my-8 md:my-12">
+                <p class="text-gray-600 text-sm mt-6">
+                    Permanent © 2025 by Heri Sanjaya. All rights reserved.
+                </p>
+            </footer>
+        </div>
+    </div>
+
+    <!-- FLOATING CONSOLE HTML -->
+    <div id="floatingConsole">
+        <div id="consoleHeader">
+            <span>Console</span>
+            <div>
+                <button id="clearConsoleButton">Clear</button>
+                <button id="hideConsoleButton">Hide</button>
+            </div>
+        </div>
+        <div id="consoleContent"></div>
+    </div>
+    <button id="showConsoleButton" class="premium-button hidden p-2 rounded-full shadow-lg">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4" /></svg>
+    </button>
+    
+    <script>
+    // --- FLOATING CONSOLE SCRIPT ---
+    // Kode ini harus dijalankan paling pertama agar bisa menangkap semua log dan error.
+    (function() {
+        const consoleContainer = document.getElementById('floatingConsole');
+        const consoleContent = document.getElementById('consoleContent');
+        const clearButton = document.getElementById('clearConsoleButton');
+        const hideButton = document.getElementById('hideConsoleButton');
+        const showButton = document.getElementById('showConsoleButton');
+
+        // Fungsi untuk menambahkan pesan ke konsol
+        function addLogToConsole(args, type) {
+            const p = document.createElement('p');
+            p.className = 'log-' + type;
+            const message = args.map(arg => {
+                if (typeof arg === 'object' && arg !== null) {
+                    try {
+                        return JSON.stringify(arg);
+                    } catch (e) {
+                        return 'Unserializable Object';
+                    }
+                }
+                return String(arg);
+            }).join(' ');
+            
+            p.textContent = `> ${message}`;
+            consoleContent.appendChild(p);
+            consoleContent.scrollTop = consoleContent.scrollHeight; // Auto-scroll
+        }
+
+        // Simpan fungsi console asli
+        const originalConsole = {
+            log: console.log,
+            error: console.error,
+            warn: console.warn,
+            info: console.info,
+        };
+
+        // Ganti fungsi console
+        console.log = function(...args) {
+            originalConsole.log.apply(console, args);
+            addLogToConsole(args, 'log');
+        };
+        console.error = function(...args) {
+            originalConsole.error.apply(console, args);
+            addLogToConsole(args, 'error');
+        };
+        console.warn = function(...args) {
+            originalConsole.warn.apply(console, args);
+            addLogToConsole(args, 'warn');
+        };
+        console.info = function(...args) {
+            originalConsole.info.apply(console, args);
+            addLogToConsole(args, 'info');
+        };
+        
+        // Tangkap error global yang tidak tertangkap try...catch
+        window.onerror = function(message, source, lineno, colno, error) {
+            console.error(`[Global Error] ${message}`, error);
+            return false;
+        };
+
+        // Event listeners untuk tombol
+        clearButton.addEventListener('click', () => {
+            consoleContent.innerHTML = '';
+        });
+        hideButton.addEventListener('click', () => {
+            consoleContainer.classList.add('hidden');
+            showButton.classList.remove('hidden');
+        });
+        showButton.addEventListener('click', () => {
+            consoleContainer.classList.remove('hidden');
+            showButton.classList.add('hidden');
+        });
+
+        console.log("Floating console initialized.");
+    })();
+    </script>
+
+    <!-- Firebase SDKs and Security Logic -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // Hardcoded Firebase Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyAjs_-oH_kma3lHU4BCyStN8W0606MYLus",
+            authDomain: "permanentmagicapp.firebaseapp.com",
+            projectId: "permanentmagicapp",
+            storageBucket: "permanentmagicapp.firebasestorage.app",
+            messagingSenderId: "695981452362",
+            appId: "1:695981452362:web:a0155863e767fa63424ab3"
+        };
+
+        try {
+            const app = initializeApp(firebaseConfig);
+            const firestore = getFirestore(app);
+            console.log("Firebase initialized successfully.");
+
+            const passwordPrompt = document.getElementById('passwordPrompt');
+            const instructionContent = document.getElementById('instructionContent');
+            const passcodeInput = document.getElementById('passcodeInput');
+            const accessButton = document.getElementById('accessButton');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            const STORAGE_KEY = 'permanentInstructionAccessGranted';
+
+            function showInstructions() {
+                passwordPrompt.classList.add('hidden');
+                instructionContent.classList.remove('hidden');
+                console.log("Access granted, showing instructions.");
+            }
+
+            async function verifyPasscode() {
+                const inputCode = passcodeInput.value.trim();
+                if (!inputCode) {
+                    errorMessage.textContent = 'Please enter a passcode.';
+                    console.warn("Passcode input was empty.");
+                    return;
+                }
+
+                errorMessage.textContent = '';
+                accessButton.disabled = true;
+                accessButton.textContent = 'Verifying...';
+                console.log("Verifying passcode...");
+
+                try {
+                    const passRef = doc(firestore, "instructionAccess", "pass");
+                    const docSnap = await getDoc(passRef);
+
+                    if (docSnap.exists() && docSnap.data().code === inputCode) {
+                        localStorage.setItem(STORAGE_KEY, 'true');
+                        console.log("Passcode correct!");
+                        showInstructions();
+                    } else {
+                        errorMessage.textContent = 'Incorrect passcode.';
+                        console.error("Incorrect passcode entered.");
+                    }
+                } catch (error) {
+                    console.error("Error verifying passcode:", error);
+                    errorMessage.textContent = 'Verification failed. Please try again.';
+                } finally {
+                    accessButton.disabled = false;
+                    accessButton.textContent = 'Read Instructions';
+                }
+            }
+
+            function initializeSecurity() {
+                if (localStorage.getItem(STORAGE_KEY) === 'true') {
+                    console.log("Access already granted from localStorage.");
+                    showInstructions();
+                } else {
+                    passwordPrompt.classList.remove('hidden');
+                    console.log("Awaiting passcode entry.");
+                }
+            }
+
+            accessButton.addEventListener('click', verifyPasscode);
+            passcodeInput.addEventListener('keypress', (event) => {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    verifyPasscode();
+                }
+            });
+
+            initializeSecurity();
+        } catch (e) {
+            console.error("Critical error during initialization:", e);
+        }
+    </script>
+</body>
+</html>
