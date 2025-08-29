@@ -22,12 +22,34 @@
             font-family: 'Syne', sans-serif;
         }
         .esp-symbol {
-            transition: all 0.3s ease-in-out;
+            transition: clip-path 0.4s ease-in-out, opacity 0.4s ease-in-out;
             filter: drop-shadow(0 0 8px rgba(79, 70, 229, 0.4));
+            clip-path: inset(0 0 0 0);
+            opacity: 1;
         }
         .esp-symbol:hover {
             transform: scale(1.1);
             filter: drop-shadow(0 0 15px rgba(99, 102, 241, 0.6));
+        }
+        /* PERUBAHAN DI SINI: Mengubah arah wipe menjadi kiri ke kanan */
+        .esp-symbol.wiped {
+            clip-path: inset(0 0 0 100%);
+            opacity: 0;
+        }
+        #touch-indicator {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10;
+            opacity: 0;
+            transition: top 0.3s ease-out, left 0.3s ease-out, opacity 0.2s ease-out, transform 0.4s ease-out;
+            transform: translate(-50%, -50%) scale(0.8);
+        }
+        #touch-indicator.wiping {
+            transition: top 0.3s ease-out, left 0.4s linear, opacity 0.2s ease-out, transform 0.4s ease-out;
         }
         .hero-circle {
             animation: pulse-glow 5s infinite alternate;
@@ -61,16 +83,14 @@
         .delay-2 { animation-delay: 0.4s; }
         .delay-3 { animation-delay: 0.6s; }
         .delay-4 { animation-delay: 0.8s; }
-        /* Tailwind CSS Aspect Ratio Plugin (for older browser support if needed) */
         .aspect-w-9 { position: relative; padding-bottom: 177.77%; }
         .aspect-h-16 { }
         .aspect-w-9 > *, .aspect-h-16 > * { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-
     </style>
 </head>
 <body class="bg-gray-900 text-gray-200">
 
-    <!-- Hero Section - The Circle -->
+    <!-- Hero Section -->
     <div class="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
         <div class="relative z-10 flex flex-col items-center text-center">
             <div class="hero-circle w-72 h-72 md:w-96 md:h-96 border-4 border-indigo-500 rounded-full flex flex-col items-center justify-center p-8">
@@ -105,15 +125,15 @@
                     One by one, the others disappear, leaving their thought as a <span class="text-indigo-400 font-bold">permanent fixture</span> on the screen.
                 </p>
             </div>
-            <!-- Realistic Phone Mockup -->
-            <div class="flex justify-center items-center">
+            <!-- Realistic Phone Mockup - container diberi ID -->
+            <div id="mockup-container" class="flex justify-center items-center">
                 <div class="relative mx-auto border-gray-700 bg-gray-800 border-[10px] rounded-[2.5rem] h-[520px] w-[260px] shadow-xl">
                     <div class="w-[120px] h-[16px] bg-gray-800 top-0 rounded-b-[1rem] left-1/2 -translate-x-1/2 absolute"></div>
                     <div class="h-[36px] w-[3px] bg-gray-700 absolute -left-[13px] top-[104px] rounded-l-lg"></div>
                     <div class="h-[36px] w-[3px] bg-gray-700 absolute -left-[13px] top-[150px] rounded-l-lg"></div>
                     <div class="h-[52px] w-[3px] bg-gray-700 absolute -right-[13px] top-[122px] rounded-r-lg"></div>
-                    <div class="rounded-[2rem] overflow-hidden w-full h-full bg-black flex items-center justify-center p-6">
-                        <!-- ESP Symbols Grid (Dice Layout with Canvas) -->
+                    <div id="phone-screen" class="relative rounded-[2rem] overflow-hidden w-full h-full bg-black flex items-center justify-center p-6">
+                        <div id="touch-indicator"></div>
                         <div class="grid grid-cols-3 grid-rows-3 w-full h-full">
                             <div class="flex justify-center items-center esp-symbol"><canvas id="esp-circle" width="48" height="48"></canvas></div>
                             <div></div>
@@ -131,7 +151,7 @@
         </div>
     </div>
 
-    <!-- Features Section -->
+    <!-- Sections Lainnya -->
     <div class="py-20 px-4 sm:px-6 lg:px-8 bg-gray-900/50">
         <div class="max-w-6xl mx-auto text-center">
             <h2 class="font-syne text-3xl md:text-4xl font-bold text-white">Pure. Direct. Impossible.</h2>
@@ -161,21 +181,18 @@
         </div>
     </div>
     
-    <!-- Trailer Section -->
     <div id="trailer" class="py-20 px-4 sm:px-6 lg:px-8 bg-black">
         <div class="max-w-4xl mx-auto text-center">
             <h2 class="font-syne text-3xl md:text-4xl font-bold text-white">See It To Believe It</h2>
             <p class="mt-4 max-w-2xl mx-auto text-lg text-gray-400">Watch the official trailer and witness the impossible reactions Permanent creates.</p>
             <div class="mt-8 max-w-xs mx-auto">
                 <div class="aspect-w-9 aspect-h-16 rounded-lg overflow-hidden shadow-2xl shadow-indigo-900/50 border-2 border-gray-700">
-                    <!-- YouTube embed -->
                     <iframe class="w-full h-full" src="https://www.youtube.com/embed/vbuYuAzEtsg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- A Note from the Creator Section -->
     <div class="py-20 px-4 sm:px-6 lg:px-8">
         <div class="max-w-3xl mx-auto text-center">
             <h2 class="font-syne text-3xl font-bold text-white">A Note From The Mind of Heri Sanjaya</h2>
@@ -188,7 +205,6 @@
         </div>
     </div>
 
-    <!-- CTA Section -->
     <div class="py-20 px-4 sm:px-6 lg:px-8 text-center bg-gray-900/70">
         <h2 class="font-syne text-4xl md:text-5xl font-extrabold text-white">Make Their Thought Real.</h2>
         <p class="mt-4 max-w-xl mx-auto text-lg text-gray-300">Get instant access to the complete instruction by Heri Sanjaya. Learn Permanent in minutes and start performing miracles today.</p>
@@ -201,7 +217,6 @@
         </div>
     </div>
 
-    <!-- Footer -->
     <footer class="text-center py-6 bg-gray-900">
         <p class="text-gray-600 text-sm">&copy; 2024 Heri Sanjaya. All rights reserved. A tool for magicians and mentalists.</p>
     </footer>
@@ -209,38 +224,23 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const symbols = [
-                { name: 'Circle', value: 1, draw: (c, x, y, s) => { c.arc(x, y, s * 0.35, 0, Math.PI * 2); } },
-                { name: 'Cross', value: 2, draw: (c, x, y, s) => { c.moveTo(x, y - s * 0.35); c.lineTo(x, y + s * 0.35); c.moveTo(x - s * 0.35, y); c.lineTo(x + s * 0.35, y); } },
-                { name: 'Wavy Lines', value: 3, draw: (c, x, y, s) => {
-                    for (let i = -1; i <= 1; i++) {
-                        c.moveTo(x - s * 0.3, y + s * 0.2 * i);
-                        c.quadraticCurveTo(x - s * 0.15, y + s * 0.2 * i - s * 0.2, x, y + s * 0.2 * i);
-                        c.quadraticCurveTo(x + s * 0.15, y + s * 0.2 * i + s * 0.2, x + s * 0.3, y + s * 0.2 * i);
-                    }
-                } },
-                { name: 'Square', value: 4, draw: (c, x, y, s) => { c.rect(x - s * 0.35, y - s * 0.35, s * 0.7, s * 0.7); } },
-                { name: 'Star', value: 5, draw: (c, x, y, s) => {
-                    c.moveTo(x, y - s * 0.35);
-                    for (let i = 1; i < 5; i++) {
-                        c.lineTo(x + Math.sin(i * 0.8 * Math.PI) * s * 0.35, y - Math.cos(i * 0.8 * Math.PI) * s * 0.35);
-                    }
-                    c.closePath();
-                } }
+                { name: 'Circle', draw: (c, x, y, s) => { c.arc(x, y, s * 0.35, 0, Math.PI * 2); } },
+                { name: 'Cross', draw: (c, x, y, s) => { c.moveTo(x, y - s * 0.35); c.lineTo(x, y + s * 0.35); c.moveTo(x - s * 0.35, y); c.lineTo(x + s * 0.35, y); } },
+                { name: 'Wavy Lines', draw: (c, x, y, s) => { for (let i = -1; i <= 1; i++) { c.moveTo(x - s * 0.3, y + s * 0.2 * i); c.quadraticCurveTo(x - s * 0.15, y + s * 0.2 * i - s * 0.2, x, y + s * 0.2 * i); c.quadraticCurveTo(x + s * 0.15, y + s * 0.2 * i + s * 0.2, x + s * 0.3, y + s * 0.2 * i); } } },
+                { name: 'Square', draw: (c, x, y, s) => { c.rect(x - s * 0.35, y - s * 0.35, s * 0.7, s * 0.7); } },
+                { name: 'Star', draw: (c, x, y, s) => { c.moveTo(x, y - s * 0.35); for (let i = 1; i < 5; i++) { c.lineTo(x + Math.sin(i * 0.8 * Math.PI) * s * 0.35, y - Math.cos(i * 0.8 * Math.PI) * s * 0.35); } c.closePath(); } }
             ];
-
-            function drawSymbol(canvasId, symbolDrawer) {
+            
+            function drawSymbol(canvasId, drawer) {
                 const canvas = document.getElementById(canvasId);
                 if (!canvas) return;
                 const ctx = canvas.getContext('2d');
                 const size = canvas.width;
-                const x = size / 2;
-                const y = size / 2;
-                
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.clearRect(0, 0, size, size);
                 ctx.strokeStyle = 'white';
                 ctx.lineWidth = 3.5;
                 ctx.beginPath();
-                symbolDrawer(ctx, x, y, size);
+                drawer(ctx, size / 2, size / 2, size);
                 ctx.stroke();
             }
 
@@ -249,9 +249,100 @@
             drawSymbol('esp-wavy', symbols[2].draw);
             drawSymbol('esp-square', symbols[3].draw);
             drawSymbol('esp-star', symbols[4].draw);
+
+            // --- Logika Animasi Cerdas dengan Intersection Observer ---
+            const mockupContainer = document.getElementById('mockup-container');
+            const phoneScreen = document.getElementById('phone-screen');
+            const touchIndicator = document.getElementById('touch-indicator');
+            const permanentSymbolId = 'esp-circle';
+            const symbolIdsToWipe = ['esp-cross', 'esp-square', 'esp-wavy', 'esp-star'];
+            const allSymbolElements = [permanentSymbolId, ...symbolIdsToWipe].map(id => document.getElementById(id).parentElement);
+            
+            let isAnimationActive = false;
+
+            const sleep = ms => new Promise(res => setTimeout(res, ms));
+            function shuffle(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+            }
+
+            function resetAnimationState() {
+                touchIndicator.style.opacity = '0';
+                allSymbolElements.forEach(el => el.classList.remove('wiped'));
+            }
+
+            async function runFullAnimation() {
+                resetAnimationState();
+                await sleep(500);
+
+                const permanentSymbolEl = document.getElementById(permanentSymbolId).parentElement;
+                const rectP = permanentSymbolEl.getBoundingClientRect();
+                const screenRect = phoneScreen.getBoundingClientRect();
+                
+                touchIndicator.style.top = `${rectP.top - screenRect.top + rectP.height / 2}px`;
+                touchIndicator.style.left = `${rectP.left - screenRect.left}px`;
+                touchIndicator.style.opacity = '1';
+                await sleep(300);
+
+                touchIndicator.classList.add('wiping');
+                touchIndicator.style.left = `${rectP.left - screenRect.left + rectP.width}px`;
+                await sleep(400);
+                touchIndicator.classList.remove('wiping');
+
+                const shuffledSymbols = [...symbolIdsToWipe];
+                shuffle(shuffledSymbols);
+
+                for (const symbolId of shuffledSymbols) {
+                    if (!isAnimationActive) return;
+                    const symbolEl = document.getElementById(symbolId).parentElement;
+                    const rect = symbolEl.getBoundingClientRect();
+
+                    touchIndicator.style.top = `${rect.top - screenRect.top + rect.height / 2}px`;
+                    touchIndicator.style.left = `${rect.left - screenRect.left}px`;
+                    await sleep(400);
+
+                    touchIndicator.classList.add('wiping');
+                    symbolEl.classList.add('wiped');
+                    touchIndicator.style.left = `${rect.left - screenRect.left + rect.width}px`;
+                    await sleep(400);
+                    touchIndicator.classList.remove('wiping');
+                }
+
+                touchIndicator.style.opacity = '0';
+                await sleep(2500);
+            }
+
+            async function animationLoop() {
+                while (isAnimationActive) {
+                    await runFullAnimation();
+                }
+            }
+            
+            const observerOptions = {
+                root: null,
+                threshold: 0.7
+            };
+
+            const observerCallback = (entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        if (!isAnimationActive) {
+                            isAnimationActive = true;
+                            animationLoop();
+                        }
+                    } else {
+                        isAnimationActive = false;
+                        resetAnimationState();
+                    }
+                });
+            };
+
+            const observer = new IntersectionObserver(observerCallback, observerOptions);
+            observer.observe(mockupContainer);
         });
     </script>
 
 </body>
 </html>
-
