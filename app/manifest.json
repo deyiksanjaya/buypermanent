@@ -1,23 +1,41 @@
 {
-  "name": "Permanent",
-  "short_name": "Permanent",
+  "name": "Permanent QR Generator",
+  "short_name": "QR Gen",
+  "description": "Permanent QR Generator by Heri Sanjaya",
+  
   "start_url": "/app/qrgenerator.html",
-  "display": "fullscreen",
+  "scope": "/app/",
+  "id": "/app/qrgenerator.html",
+
+  "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#000000",
-  "description": "QR code generator for PERMANENT by Heri Sanjaya",
+  
   "icons": [
     {
-      "src": "icons/icon-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "icons/icon-512x512.png",
+      "src": "https://cdn-icons-png.flaticon.com/512/107/107132.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ],
-  "lang": "en",
-  "orientation": "portrait"
+
+  "screenshots": [
+    {
+      "src": "/app/screenshot1.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "QR Code Generator"
+    },
+    {
+      "src": "/app/screenshot2.png",
+      "sizes": "720x1280",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Web Page Preview"
+    }
+  ],
+
+  "categories": ["utilities", "productivity"]
 }
