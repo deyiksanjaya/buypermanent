@@ -1,7 +1,7 @@
 {
   "name": "Permanent",
   "short_name": "Permanent",
-  "start_url": "qrgenerator.html",
+  "start_url": "/app/qrgenerator.html",
   "display": "fullscreen",
   "background_color": "#000000",
   "theme_color": "#000000",
@@ -17,5 +17,7 @@
       "sizes": "512x512",
       "type": "image/png"
     }
-  ]
+  ],
+  "lang": "en",
+  "orientation": "portrait"
 }
