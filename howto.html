@@ -110,69 +110,6 @@
             opacity: 0.5;
             cursor: not-allowed;
         }
-
-        /* --- FLOATING CONSOLE STYLES --- */
-        #floatingConsole {
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            width: 90%;
-            max-width: 400px;
-            height: 200px;
-            background-color: rgba(0, 0, 0, 0.85);
-            border: 1px solid #444;
-            border-radius: 8px;
-            z-index: 99999;
-            display: flex;
-            flex-direction: column;
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-            font-family: monospace;
-            font-size: 12px;
-        }
-        #consoleHeader {
-            background-color: #222;
-            padding: 4px 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #444;
-        }
-        #consoleHeader span {
-            font-weight: bold;
-            color: #eee;
-        }
-        #consoleHeader button {
-            background-color: #555;
-            color: white;
-            border: none;
-            padding: 2px 8px;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-left: 5px;
-        }
-        #consoleContent {
-            flex-grow: 1;
-            overflow-y: auto;
-            padding: 8px;
-        }
-        #consoleContent p {
-            margin: 0 0 4px;
-            line-height: 1.4;
-            color: #fff;
-            word-break: break-all;
-        }
-        .log-error { color: #ff8080 !important; }
-        .log-warn { color: #ffdd80 !important; }
-        .log-info { color: #80c0ff !important; }
-        .log-log { color: #ffffff !important; }
-        #showConsoleButton {
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            z-index: 99998;
-        }
-
     </style>
 </head>
 
@@ -180,7 +117,6 @@
 
     <!-- Password Prompt Section (Visible by default) -->
     <div id="passwordPrompt" class="w-full h-full flex items-center justify-center p-4">
-        <!-- Content remains the same -->
         <div class="w-full max-w-sm text-center">
             <h1 class="cinzel-font text-3xl font-bold text-white mb-6">Access Instructions</h1>
             <div class="flex flex-col gap-4">
@@ -194,12 +130,15 @@
 
     <!-- Main Instruction Content (Hidden by default) -->
     <div id="instructionContent" class="hidden">
-        <!-- All instruction content remains the same -->
         <div class="container mx-auto max-w-3xl p-4 md:p-8">
+
+            <!-- Header -->
             <header class="text-center my-8 md:my-12">
                 <h1 class="text-4xl md:text-5xl font-bold text-white tracking-wider">Permanent</h1>
                 <p class="cinzel-font text-xl text-gray-400 mt-2">Instruction Manual</p>
             </header>
+
+            <!-- The Effect Section -->
             <section class="content-card">
                 <h2 class="text-2xl font-bold text-white">The Effect</h2>
                 <p>
@@ -209,10 +148,14 @@
                     Once they are sure of their choice, you explain that they could have been thinking of any symbol, but this one is now special. You ask them to focus their energy on that thought and make it permanent. When they try to erase their chosen symbol, they can't. Every other symbol is erasable, but not the one they were merely thinking of.
                 </p>
             </section>
-             <section class="content-card">
+
+            <!-- The Complete Performance Guide Section -->
+            <section class="content-card">
                 <h2 class="text-2xl font-bold text-white">The Complete Performance Guide</h2>
+                
                 <h3 class="text-xl font-semibold text-white mt-6 mb-4">Part 1: The Setup (Using the QR Generator App)</h3>
                 <p class="mb-6">This is your private preparation, done in seconds before the trick begins. The goal is to create a unique link for your spectator.</p>
+                
                 <ol class="list-decimal list-inside space-y-6">
                     <li>
                         <strong class="highlight">Activate Your License:</strong> The first time you open the app, you will be prompted to enter your email and license code. This is a one-time activation per device.
@@ -241,8 +184,10 @@
                         </ul>
                     </li>
                 </ol>
+                
                 <h3 class="text-xl font-semibold text-white mt-10 mb-4">Part 2: The Performance & The Script</h3>
                 <p class="mb-6">Once the spectator scans the code and opens the page on their phone, the magic begins. Your role is now purely psychological.</p>
+                
                 <ol class="list-decimal list-inside space-y-6">
                     <li>
                         Hand the phone to the spectator. Guide their attention to the five symbols.
@@ -272,8 +217,11 @@
                     </li>
                 </ol>
             </section>
+            
+            <!-- Advanced Handling & Features Section -->
             <section class="content-card">
                 <h2 class="text-2xl font-bold text-white">Advanced Handling & Features</h2>
+                
                 <div class="mt-6">
                     <h3 class="text-xl font-semibold text-white mb-2">The 'Refresh-Proof' Security</h3>
                     <p>
@@ -281,6 +229,7 @@
                     </p>
                     <p class="mt-2">This is also how a spectator can "see the revelation again." If they ask what would happen if they tried again, encourage them to refresh the page. The fact that the same symbol remains locked reinforces the effect.</p>
                 </div>
+
                 <div class="mt-8">
                     <h3 class="text-xl font-semibold text-white mb-2">A Note on Repeating the Effect</h3>
                     <p>
@@ -293,6 +242,7 @@
                        However, if a situation absolutely requires a reset for a new performance (e.g., performing for a different group of people), the <code class="highlight">Triple-Tap Reset</code> is the method to clear the previous result.
                     </p>
                 </div>
+                
                 <div class="mt-8">
                     <h3 class="text-xl font-semibold text-white mb-2">The Secret Reset (Triple-Tap)</h3>
                     <p>
@@ -302,6 +252,7 @@
                         To perform the reset, <strong class="highlight">triple-tap anywhere</strong> on the spectator's screen. The page will flash white for a moment—this is your visual confirmation that the reset was successful. All secret data is now erased, and the page has returned to its normal, non-magical state.
                     </p>
                 </div>
+
                 <div class="mt-8 border-t border-gray-700 pt-6">
                     <h3 class="text-xl font-semibold text-white mb-2">Summary: Refresh vs. Reset</h3>
                     <ul class="list-disc list-inside space-y-2">
@@ -310,112 +261,24 @@
                     </ul>
                 </div>
             </section>
+
+            <!-- Footer -->
             <footer class="text-center my-8 md:my-12">
                 <p class="text-gray-600 text-sm mt-6">
                     Permanent © 2025 by Heri Sanjaya. All rights reserved.
                 </p>
             </footer>
+
         </div>
     </div>
-
-    <!-- FLOATING CONSOLE HTML -->
-    <div id="floatingConsole">
-        <div id="consoleHeader">
-            <span>Console</span>
-            <div>
-                <button id="clearConsoleButton">Clear</button>
-                <button id="hideConsoleButton">Hide</button>
-            </div>
-        </div>
-        <div id="consoleContent"></div>
-    </div>
-    <button id="showConsoleButton" class="premium-button hidden p-2 rounded-full shadow-lg">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4" /></svg>
-    </button>
-    
-    <script>
-    // --- FLOATING CONSOLE SCRIPT ---
-    // Kode ini harus dijalankan paling pertama agar bisa menangkap semua log dan error.
-    (function() {
-        const consoleContainer = document.getElementById('floatingConsole');
-        const consoleContent = document.getElementById('consoleContent');
-        const clearButton = document.getElementById('clearConsoleButton');
-        const hideButton = document.getElementById('hideConsoleButton');
-        const showButton = document.getElementById('showConsoleButton');
-
-        // Fungsi untuk menambahkan pesan ke konsol
-        function addLogToConsole(args, type) {
-            const p = document.createElement('p');
-            p.className = 'log-' + type;
-            const message = args.map(arg => {
-                if (typeof arg === 'object' && arg !== null) {
-                    try {
-                        return JSON.stringify(arg);
-                    } catch (e) {
-                        return 'Unserializable Object';
-                    }
-                }
-                return String(arg);
-            }).join(' ');
-            
-            p.textContent = `> ${message}`;
-            consoleContent.appendChild(p);
-            consoleContent.scrollTop = consoleContent.scrollHeight; // Auto-scroll
-        }
-
-        // Simpan fungsi console asli
-        const originalConsole = {
-            log: console.log,
-            error: console.error,
-            warn: console.warn,
-            info: console.info,
-        };
-
-        // Ganti fungsi console
-        console.log = function(...args) {
-            originalConsole.log.apply(console, args);
-            addLogToConsole(args, 'log');
-        };
-        console.error = function(...args) {
-            originalConsole.error.apply(console, args);
-            addLogToConsole(args, 'error');
-        };
-        console.warn = function(...args) {
-            originalConsole.warn.apply(console, args);
-            addLogToConsole(args, 'warn');
-        };
-        console.info = function(...args) {
-            originalConsole.info.apply(console, args);
-            addLogToConsole(args, 'info');
-        };
-        
-        // Tangkap error global yang tidak tertangkap try...catch
-        window.onerror = function(message, source, lineno, colno, error) {
-            console.error(`[Global Error] ${message}`, error);
-            return false;
-        };
-
-        // Event listeners untuk tombol
-        clearButton.addEventListener('click', () => {
-            consoleContent.innerHTML = '';
-        });
-        hideButton.addEventListener('click', () => {
-            consoleContainer.classList.add('hidden');
-            showButton.classList.remove('hidden');
-        });
-        showButton.addEventListener('click', () => {
-            consoleContainer.classList.remove('hidden');
-            showButton.classList.add('hidden');
-        });
-
-        console.log("Floating console initialized.");
-    })();
-    </script>
 
     <!-- Firebase SDKs and Security Logic -->
     <script type="module">
+        // --- KODE BARU DITAMBAHKAN DI SINI ---
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        // --- AKHIR DARI KODE BARU ---
 
         // Hardcoded Firebase Config
         const firebaseConfig = {
@@ -426,82 +289,85 @@
             messagingSenderId: "695981452362",
             appId: "1:695981452362:web:a0155863e767fa63424ab3"
         };
+        
+        let firestore; // Dideklarasikan di sini agar bisa diakses oleh fungsi
 
-        try {
-            const app = initializeApp(firebaseConfig);
-            const firestore = getFirestore(app);
-            console.log("Firebase initialized successfully.");
+        const passwordPrompt = document.getElementById('passwordPrompt');
+        const instructionContent = document.getElementById('instructionContent');
+        const passcodeInput = document.getElementById('passcodeInput');
+        const accessButton = document.getElementById('accessButton');
+        const errorMessage = document.getElementById('errorMessage');
+        
+        const STORAGE_KEY = 'permanentInstructionAccessGranted';
 
-            const passwordPrompt = document.getElementById('passwordPrompt');
-            const instructionContent = document.getElementById('instructionContent');
-            const passcodeInput = document.getElementById('passcodeInput');
-            const accessButton = document.getElementById('accessButton');
-            const errorMessage = document.getElementById('errorMessage');
-            
-            const STORAGE_KEY = 'permanentInstructionAccessGranted';
+        function showInstructions() {
+            passwordPrompt.classList.add('hidden');
+            instructionContent.classList.remove('hidden');
+        }
 
-            function showInstructions() {
-                passwordPrompt.classList.add('hidden');
-                instructionContent.classList.remove('hidden');
-                console.log("Access granted, showing instructions.");
+        async function verifyPasscode() {
+            const inputCode = passcodeInput.value.trim();
+            if (!inputCode) {
+                errorMessage.textContent = 'Please enter a passcode.';
+                return;
             }
 
-            async function verifyPasscode() {
-                const inputCode = passcodeInput.value.trim();
-                if (!inputCode) {
-                    errorMessage.textContent = 'Please enter a passcode.';
-                    console.warn("Passcode input was empty.");
-                    return;
-                }
+            errorMessage.textContent = '';
+            accessButton.disabled = true;
+            accessButton.textContent = 'Verifying...';
 
-                errorMessage.textContent = '';
-                accessButton.disabled = true;
-                accessButton.textContent = 'Verifying...';
-                console.log("Verifying passcode...");
+            try {
+                const passRef = doc(firestore, "instructionAccess", "pass");
+                const docSnap = await getDoc(passRef);
 
-                try {
-                    const passRef = doc(firestore, "instructionAccess", "pass");
-                    const docSnap = await getDoc(passRef);
-
-                    if (docSnap.exists() && docSnap.data().code === inputCode) {
-                        localStorage.setItem(STORAGE_KEY, 'true');
-                        console.log("Passcode correct!");
-                        showInstructions();
-                    } else {
-                        errorMessage.textContent = 'Incorrect passcode.';
-                        console.error("Incorrect passcode entered.");
-                    }
-                } catch (error) {
-                    console.error("Error verifying passcode:", error);
-                    errorMessage.textContent = 'Verification failed. Please try again.';
-                } finally {
-                    accessButton.disabled = false;
-                    accessButton.textContent = 'Read Instructions';
-                }
-            }
-
-            function initializeSecurity() {
-                if (localStorage.getItem(STORAGE_KEY) === 'true') {
-                    console.log("Access already granted from localStorage.");
+                if (docSnap.exists() && docSnap.data().code === inputCode) {
+                    localStorage.setItem(STORAGE_KEY, 'true');
                     showInstructions();
                 } else {
-                    passwordPrompt.classList.remove('hidden');
-                    console.log("Awaiting passcode entry.");
+                    errorMessage.textContent = 'Incorrect passcode.';
                 }
+            } catch (error) {
+                console.error("Error verifying passcode:", error);
+                errorMessage.textContent = 'Verification failed. Please try again.';
+            } finally {
+                accessButton.disabled = false;
+                accessButton.textContent = 'Read Instructions';
+            }
+        }
+
+        async function initialize() {
+            // Cek local storage dulu
+            if (localStorage.getItem(STORAGE_KEY) === 'true') {
+                showInstructions();
+                return; // Hentikan eksekusi jika sudah punya akses
             }
 
-            accessButton.addEventListener('click', verifyPasscode);
-            passcodeInput.addEventListener('keypress', (event) => {
-                if (event.key === 'Enter') {
-                    event.preventDefault();
-                    verifyPasscode();
-                }
-            });
+            // Jika belum, tampilkan form dan inisialisasi Firebase
+            passwordPrompt.classList.remove('hidden');
 
-            initializeSecurity();
-        } catch (e) {
-            console.error("Critical error during initialization:", e);
+            try {
+                const app = initializeApp(firebaseConfig);
+                const auth = getAuth(app); // Inisialisasi Auth
+                firestore = getFirestore(app);
+                
+                await signInAnonymously(auth); // Lakukan sign-in anonim
+                console.log("Signed in anonymously.");
+
+            } catch(e) {
+                console.error("Firebase Initialization Failed:", e);
+                errorMessage.textContent = "Could not connect to server.";
+            }
         }
+
+        accessButton.addEventListener('click', verifyPasscode);
+        passcodeInput.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                verifyPasscode();
+            }
+        });
+
+        initialize();
     </script>
 </body>
 </html>
