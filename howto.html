@@ -6,14 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Permanent - Instruction Manual</title>
     
-    <!-- Meta Tags for Web App Look -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Permanent Help">
-    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/95/95240.png">
-    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/95/95240.png">
-
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
@@ -148,6 +140,15 @@
                     Once they are sure of their choice, you explain that they could have been thinking of any symbol, but this one is now special. You ask them to focus their energy on that thought and make it permanent. When they try to erase their chosen symbol, they can't. Every other symbol is erasable, but not the one they were merely thinking of.
                 </p>
             </section>
+            
+            <!-- How the Site Works Section -->
+            <section class="content-card">
+                <h2 class="text-2xl font-bold text-white">How The Site Works</h2>
+                <ul class="list-disc list-inside space-y-4">
+                    <li>The unique link from the QR code acts as a key. It puts the webpage into a special "Performance Mode," which is necessary to perform the trick.</li>
+                    <li>In Performance Mode, the webpage secretly notes the very first symbol the spectator try to wipe. This becomes the 'locked' symbol for the rest of the performance.</li>
+                </ul>
+            </section>
 
             <!-- The Complete Performance Guide Section -->
             <section class="content-card">
@@ -190,7 +191,7 @@
                 
                 <ol class="list-decimal list-inside space-y-6">
                     <li>
-                        Hand the phone to the spectator. Guide their attention to the five symbols.
+                        After the spectator scans the QR code and the page loads on their phone, say:
                         <div class="script-box">
                             "Please take a look at these five symbols. In a moment, I want you to choose just one. This is a completely free choice, and you can change your mind as many times as you like. Just let me know when you have finally settled on one."
                         </div>
@@ -261,6 +262,26 @@
                     </ul>
                 </div>
             </section>
+            
+            <!-- Join the Community Section -->
+            <section class="content-card">
+                <h2 class="text-2xl font-bold text-white">Join the Community</h2>
+                <p>To discuss ideas, get support, and be the first to know about new features and updates to the website, please join our private Facebook group for PERMANENT owners.</p>
+                <p class="mt-4">You can join <a href="https://web.facebook.com/groups/1006665568123558/" class="text-blue-400 underline" target="_blank">here</a>.</p>
+                <p class="mt-4">This will be the main place for all announcements and a great way to connect with other users.</p>
+            </section>
+
+            <!-- F.A.Q. Section -->
+            <section class="content-card">
+                <h2 class="text-2xl font-bold text-white">F.A.Q.</h2>
+                <ul class="list-disc list-inside space-y-4">
+                    <li><strong class="highlight">Does this work 100% of the time?</strong> Yes. As long as the spectator follows your instructions, the method is guaranteed to work with any symbol they choose.</li>
+                    <li><strong class="highlight">What if the spectator tries to erase their symbol first?</strong> Your script and instructions stop this from happening. By asking them to erase the ones they are not thinking of, there's no logical reason for them to do otherwise. Giving clear instructions is part of being a good performer.</li>
+                    <li><strong class="highlight">Do I need an internet connection?</strong> Yes, you need an internet connection to load the webpage at the start.</li>
+                    <li><strong class="highlight">How do I reset the trick for the next performance?</strong> If you're using your own phone, the best way is to triple-click anywhere on the page. This instantly resets the effect.</li>
+                    <li><strong class="highlight">Where to contact the creator?</strong> You can contact me via Instagram <span class="highlight">@pesulapgabut</span> or find me on Facebook on the admin list of the secret group.</li>
+                </ul>
+            </section>
 
             <!-- Footer -->
             <footer class="text-center my-8 md:my-12">
@@ -274,11 +295,9 @@
 
     <!-- Firebase SDKs and Security Logic -->
     <script type="module">
-        // --- KODE BARU DITAMBAHKAN DI SINI ---
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-        // --- AKHIR DARI KODE BARU ---
 
         // Hardcoded Firebase Config
         const firebaseConfig = {
@@ -371,3 +390,4 @@
     </script>
 </body>
 </html>
+
